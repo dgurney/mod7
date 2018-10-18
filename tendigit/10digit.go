@@ -25,6 +25,7 @@ func checkSite(s int) bool {
 
 // Generate the so-called "site" number, which is the first segment of the key.
 func genSite() int {
+	// Technically the site number can be as low as 001, but for the sake of simplicity start from 100
 	for site < 100 {
 		site = r.Intn(998)
 	}
@@ -37,6 +38,7 @@ func genSeven() [7]int {
 	for i := 0; i < 7; i++ {
 		serial[i] = r.Intn(9)
 		if i == 6 {
+			// We must also generate a valid check digit
 			for serial[i] == 0 || serial[i] >= 8 {
 				serial[i] = r.Intn(7)
 			}
