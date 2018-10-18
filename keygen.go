@@ -19,7 +19,6 @@ func main() {
 		oem.GenerateOEM()
 	case *b:
 		oem.GenerateOEM()
-		fmt.Println()
 		tendigit.Generate10digit()
 	default:
 		fmt.Println("You must specify what you want to generate! Usage:")

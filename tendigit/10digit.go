@@ -71,4 +71,5 @@ func Generate10digit() {
 	for _, digits := range serial {
 		fmt.Print(digits)
 	}
+	fmt.Println()
 }

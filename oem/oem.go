@@ -73,5 +73,5 @@ func GenerateOEM() {
 	for _, digits := range serial {
 		fmt.Print(digits)
 	}
-	fmt.Printf("-%d", generateFourth())
+	fmt.Printf("-%d\n", generateFourth())
 }
