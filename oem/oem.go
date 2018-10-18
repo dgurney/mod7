@@ -66,7 +66,6 @@ func validateKey(serial [6]int) bool {
 // GenerateOEM generates an OEM key (duh).
 func GenerateOEM() {
 	for !validateKey(generateThird()) {
-		generateFirst()
 		generateThird()
 	}
 	fmt.Printf("%s-OEM-0", generateFirst())
