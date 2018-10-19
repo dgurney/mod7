@@ -4,18 +4,19 @@ package tendigit
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
 var r = rand.New(rand.NewSource(time.Now().UnixNano()))
-var site int
+var site string
 var serial [7]int
 
 func checkSite(s int) bool {
 	// Technically we could omit 999 as we don't generate a number that high, but we include it for posterity anyway.
 	invalidSites := []int{333, 444, 555, 666, 777, 888, 999}
 	for _, v := range invalidSites {
-		if v == s || s == 0 {
+		if v == s {
 			// Site number is invalid
 			return false
 		}
@@ -24,10 +25,19 @@ func checkSite(s int) bool {
 }
 
 // Generate the so-called "site" number, which is the first segment of the key.
-func genSite() int {
-	// Technically the site number can be as low as 001, but for the sake of simplicity we start from 100
-	for site < 100 {
-		site = r.Intn(998)
+func genSite() string {
+	// Technically the site number can be as low as 000, but for the sake of simplicity we start from 100
+	s := r.Intn(998)
+	for !checkSite(s) {
+		genSite()
+	}
+	switch {
+	case s < 10:
+		site = "00" + strconv.Itoa(s)
+	case s < 100 && s > 9:
+		site = "0" + strconv.Itoa(s)
+	default:
+		site = strconv.Itoa(s)
 	}
 	return site
 }
@@ -61,13 +71,11 @@ func validateSeven(serial [7]int) bool {
 
 // Generate10digit generates a 10-digit product key.
 func Generate10digit() {
-	for !checkSite(site) {
-		genSite()
-	}
+	genSite()
 	for !validateSeven(genSeven()) {
 		genSeven()
 	}
-	fmt.Printf("%d-", site)
+	fmt.Printf("%s-", site)
 	for _, digits := range serial {
 		fmt.Print(digits)
 	}
