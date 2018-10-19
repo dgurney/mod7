@@ -49,7 +49,7 @@ func generateFirst() string {
 }
 
 // The third segment (OEM is the second) must begin with a zero, but otherwise it follows the same rule as the second segment of 10-digit keys:
-// The digit sum must be seven, and the check digit cannot be 0 or >=8.
+// The digit sum must be divisible by seven, and the check digit cannot be 0 or >=8.
 func generateThird() [6]int {
 	// We generate only 6 digits because of the "first digit must be 0" rule
 	for i := 0; i < 6; i++ {
