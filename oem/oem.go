@@ -9,23 +9,28 @@ import (
 )
 
 var r = rand.New(rand.NewSource(time.Now().UnixNano()))
-var date int
-var fourth int
 var serial [6]int
 
 // Generate the first segment of the key. The first three digits represent the julian date the COA was printed (001 to 366), and the last two are the year.
 // The year cannot be below 95 or above 03 (not Y2K-compliant D:).
 func generateFirst() string {
-	// Yes, this excludes a chunk of dates, but honestly who cares?
-	for date < 100 {
-		date = r.Intn(366)
+	d := r.Intn(366)
+	// Final date string
+	var date string
+	switch {
+	case d < 100:
+		date = "0" + strconv.Itoa(d)
+	case d < 10:
+		date = "00" + strconv.Itoa(d)
+	default:
+		date = strconv.Itoa(d)
 	}
 	years := []string{"95", "96", "97", "98", "99", "00", "01", "02", "03"}
 	r.Shuffle(len(years), func(i, j int) {
 		years[i], years[j] = years[j], years[i]
 	})
 	year := years[0]
-	return strconv.Itoa(date) + year
+	return date + year
 }
 
 // The third segment (OEM is the second) must begin with a zero, but otherwise it follows the same rule as the second segment of 10-digit keys:
@@ -46,6 +51,7 @@ func generateThird() [6]int {
 
 // The fourth segment is truly irrelevant
 func generateFourth() int {
+	var fourth int
 	for fourth < 10000 {
 		fourth = r.Intn(99999)
 	}
