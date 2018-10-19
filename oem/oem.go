@@ -15,7 +15,6 @@ var serial [6]int
 // The year cannot be below 95 or above 03 (not Y2K-compliant D:).
 func generateFirst() string {
 	d := r.Intn(366)
-	// Final date string
 	var date string
 	switch {
 	case d == 0:
