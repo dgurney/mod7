@@ -73,7 +73,7 @@ func validateKey(serial [6]int) bool {
 // GenerateOEM generates an OEM key (duh).
 func GenerateOEM() {
 	for !validateKey(generateThird()) {
-		generateThird()
+		// Loop until we get a valid segment
 	}
 	fmt.Printf("%s-OEM-0", generateFirst())
 	for _, digits := range serial {
