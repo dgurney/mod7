@@ -10,6 +10,17 @@ import (
 
 var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 var serial [6]int
+var eggChance int
+
+// If the current date is the author's birthday, there's a chance of some "fun" stuff happening
+func checkBirthday() bool {
+	eggChance = r.Intn(5)
+	date := time.Now().Local().Format("2 1")
+	if date == "16 1" {
+		return true
+	}
+	return false
+}
 
 // Generate the first segment of the key. The first three digits represent the julian date the COA was printed (001 to 366), and the last two are the year.
 // The year cannot be below 95 or above 03 (not Y2K-compliant D:).
@@ -31,6 +42,9 @@ func generateFirst() string {
 		years[i], years[j] = years[j], years[i]
 	})
 	year := years[0]
+	if checkBirthday() && eggChance == 2 {
+		return "01699"
+	}
 	return date + year
 }
 
@@ -55,6 +69,10 @@ func generateFourth() int {
 	var fourth int
 	for fourth < 10000 {
 		fourth = r.Intn(99999)
+	}
+	if checkBirthday() && eggChance == 2 {
+		// Yes, these are my initials padded with 0. How original.
+		return 44470
 	}
 	return fourth
 }
