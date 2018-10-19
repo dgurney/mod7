@@ -22,6 +22,9 @@ func generateFirst() string {
 		date = "0" + strconv.Itoa(d)
 	case d < 10:
 		date = "00" + strconv.Itoa(d)
+	case d == 0:
+		// Just in case
+		date = "123"
 	default:
 		date = strconv.Itoa(d)
 	}
