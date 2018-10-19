@@ -18,13 +18,12 @@ func generateFirst() string {
 	// Final date string
 	var date string
 	switch {
-	case d < 100:
+	case d == 0:
+		date = "123"
+	case d < 100 && d > 9:
 		date = "0" + strconv.Itoa(d)
 	case d < 10:
 		date = "00" + strconv.Itoa(d)
-	case d == 0:
-		// Just in case
-		date = "123"
 	default:
 		date = strconv.Itoa(d)
 	}
