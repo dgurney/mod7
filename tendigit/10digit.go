@@ -73,7 +73,7 @@ func validateSeven(serial [7]int) bool {
 func Generate10digit() {
 	genSite()
 	for !validateSeven(genSeven()) {
-		genSeven()
+		// Loop until we get a valid segment
 	}
 	fmt.Printf("%s-", site)
 	for _, digits := range serial {
