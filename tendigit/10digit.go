@@ -14,7 +14,6 @@ var serial [7]int
 
 // Generate the so-called "site" number, which is the first segment of the key.
 func genSite() string {
-	// Technically the site number can be as low as 000, but for the sake of simplicity we start from 100
 	s := r.Intn(998)
 	// Technically we could omit 999 as we don't generate a number that high, but we include it for posterity anyway.
 	invalidSites := []int{333, 444, 555, 666, 777, 888, 999}
