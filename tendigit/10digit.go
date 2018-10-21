@@ -9,18 +9,18 @@ import (
 )
 
 var r = rand.New(rand.NewSource(time.Now().UnixNano()))
-var site string
 var serial [7]int
 
 // Generate the so-called "site" number, which is the first segment of the key.
 func genSite() string {
+	var site string
 	s := r.Intn(998)
 	// Technically we could omit 999 as we don't generate a number that high, but we include it for posterity anyway.
 	invalidSites := []int{333, 444, 555, 666, 777, 888, 999}
 	for _, v := range invalidSites {
 		if v == s {
-			// Site number is invalid
-			genSite()
+			// Site number is invalid, so we must obliterate it
+			s = 69
 		}
 	}
 
