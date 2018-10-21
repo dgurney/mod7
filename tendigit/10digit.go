@@ -12,25 +12,19 @@ var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 var site string
 var serial [7]int
 
-func checkSite(s int) bool {
+// Generate the so-called "site" number, which is the first segment of the key.
+func genSite() string {
+	// Technically the site number can be as low as 000, but for the sake of simplicity we start from 100
+	s := r.Intn(998)
 	// Technically we could omit 999 as we don't generate a number that high, but we include it for posterity anyway.
 	invalidSites := []int{333, 444, 555, 666, 777, 888, 999}
 	for _, v := range invalidSites {
 		if v == s {
 			// Site number is invalid
-			return false
+			genSite()
 		}
 	}
-	return true
-}
 
-// Generate the so-called "site" number, which is the first segment of the key.
-func genSite() string {
-	// Technically the site number can be as low as 000, but for the sake of simplicity we start from 100
-	s := r.Intn(998)
-	for !checkSite(s) {
-		genSite()
-	}
 	switch {
 	case s < 10:
 		site = "00" + strconv.Itoa(s)
@@ -71,7 +65,7 @@ func validateSeven(serial [7]int) bool {
 
 // Generate10digit generates a 10-digit product key.
 func Generate10digit() {
-	genSite()
+	site := genSite()
 	for !validateSeven(genSeven()) {
 		// Loop until we get a valid segment
 	}
