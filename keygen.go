@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"mod7/oem"
 	"mod7/tendigit"
-	"time"
 )
 
 func main() {
@@ -17,7 +16,6 @@ func main() {
 	if *r < 1 {
 		*r = 1
 	}
-	started := time.Now()
 	for i := 0; i < *r; i++ {
 		switch {
 		case *d:
@@ -32,5 +30,4 @@ func main() {
 			flag.PrintDefaults()
 		}
 	}
-	fmt.Println(time.Since(started))
 }
