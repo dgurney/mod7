@@ -5,29 +5,40 @@ import (
 	"fmt"
 	"mod7/oem"
 	"mod7/tendigit"
+	//	"time"
 )
 
 func main() {
 	b := flag.Bool("b", false, "Generate both keys")
 	o := flag.Bool("o", false, "Generate an OEM key")
 	d := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key)")
-	r := flag.Int("r", 1, "Repeat n times. I can't figure out why you'd ever need this, but whatever...")
+	r := flag.Int("r", 1, "Generate n keys.")
 	flag.Parse()
-	if *r < 1 {
+	switch {
+	case *r < 1:
 		*r = 1
 	}
+	//started := time.Now()
+	CDKeych := make(chan string)
+	OEMKeych := make(chan string)
 	for i := 0; i < *r; i++ {
 		switch {
 		case *d:
-			tendigit.Generate10digit()
+			go tendigit.Generate10digit(CDKeych)
+			fmt.Println(<-CDKeych)
 		case *o:
-			oem.GenerateOEM()
+			go oem.GenerateOEM(OEMKeych)
+			fmt.Println(<-OEMKeych)
 		case *b:
-			oem.GenerateOEM()
-			tendigit.Generate10digit()
+			go oem.GenerateOEM(OEMKeych)
+			go tendigit.Generate10digit(CDKeych)
+			fmt.Println(<-CDKeych)
+			fmt.Println(<-OEMKeych)
 		default:
 			fmt.Println("You must specify what you want to generate! Usage:")
 			flag.PrintDefaults()
+			return
 		}
 	}
+	//fmt.Println(time.Since(started))
 }
