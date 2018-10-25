@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	b := flag.Bool("b", false, "Generate both keys.")
 	o := flag.Bool("o", false, "Generate an OEM key.")
 	d := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key).")
 	r := flag.Int("r", 1, "Generate n keys.")
@@ -31,6 +32,11 @@ func main() {
 			fmt.Println(<-CDKeych)
 		case *o:
 			go oem.GenerateOEM(OEMKeych)
+			fmt.Println(<-OEMKeych)
+		case *b:
+			go oem.GenerateOEM(OEMKeych)
+			go tendigit.Generate10digit(CDKeych)
+			fmt.Println(<-CDKeych)
 			fmt.Println(<-OEMKeych)
 		default:
 			fmt.Println("You must specify what you want to generate! Usage:")
