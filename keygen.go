@@ -5,20 +5,24 @@ import (
 	"fmt"
 	"mod7/oem"
 	"mod7/tendigit"
-	//	"time"
+	"time"
 )
 
 func main() {
-	b := flag.Bool("b", false, "Generate both keys")
-	o := flag.Bool("o", false, "Generate an OEM key")
-	d := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key)")
+	b := flag.Bool("b", false, "Generate both keys.")
+	o := flag.Bool("o", false, "Generate an OEM key.")
+	d := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key).")
 	r := flag.Int("r", 1, "Generate n keys.")
+	t := flag.Bool("t", false, "Show how long the generation took.")
 	flag.Parse()
 	switch {
 	case *r < 1:
 		*r = 1
 	}
-	//started := time.Now()
+	var started time.Time
+	if *t {
+		started = time.Now()
+	}
 	CDKeych := make(chan string)
 	OEMKeych := make(chan string)
 	for i := 0; i < *r; i++ {
@@ -40,5 +44,12 @@ func main() {
 			return
 		}
 	}
-	//fmt.Println(time.Since(started))
+	if *t {
+		switch {
+		case *r > 1:
+			fmt.Printf("Took %s to generate %d keys.\n", time.Since(started), *r)
+		case *r == 1:
+			fmt.Printf("Took %s to generate %d key.\n", time.Since(started), *r)
+		}
+	}
 }
