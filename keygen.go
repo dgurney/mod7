@@ -45,11 +45,18 @@ func main() {
 		}
 	}
 	if *t {
+		var ended time.Duration
+		switch {
+		case time.Since(started).Round(time.Second) > 1:
+			ended = time.Since(started).Round(time.Millisecond)
+		default:
+			ended = time.Since(started)
+		}
 		switch {
 		case *r > 1:
-			fmt.Printf("Took %s to generate %d keys.\n", time.Since(started), *r)
+			fmt.Printf("Took %s to generate %d keys.\n", ended, *r)
 		case *r == 1:
-			fmt.Printf("Took %s to generate %d key.\n", time.Since(started), *r)
+			fmt.Printf("Took %s to generate %d key.\n", ended, *r)
 		}
 	}
 }
