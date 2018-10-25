@@ -27,6 +27,10 @@ func checkBirthday() bool {
 func generateFirst(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	wg.Add(1)
 	defer wg.Done()
+	if checkBirthday() && eggChance == 2 {
+		ch <- "01699"
+		return
+	}
 	m.Lock()
 	d := r.Intn(366)
 	var date string
@@ -42,9 +46,6 @@ func generateFirst(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	}
 	years := []string{"95", "96", "97", "98", "99", "00", "01", "02", "03"}
 	year := years[r.Intn(len(years))]
-	if checkBirthday() && eggChance == 2 {
-		ch <- "01699"
-	}
 	m.Unlock()
 	ch <- date + year
 }
@@ -90,14 +91,15 @@ func generateThird(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 func generateFourth(ch chan int, wg *sync.WaitGroup, m *sync.Mutex) {
 	wg.Add(1)
 	defer wg.Done()
+	if checkBirthday() && eggChance == 2 {
+		// Yes, these are my initials padded with 0. How original.
+		ch <- 44470
+		return
+	}
 	m.Lock()
 	var fourth int
 	for fourth < 10000 {
 		fourth = r.Intn(99999)
-	}
-	if checkBirthday() && eggChance == 2 {
-		// Yes, these are my initials padded with 0. How original.
-		ch <- 44470
 	}
 	m.Unlock()
 	ch <- fourth
