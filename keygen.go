@@ -50,7 +50,7 @@ func main() {
 		case time.Since(started).Round(time.Second) > 1:
 			ended = time.Since(started).Round(time.Millisecond)
 		default:
-			ended = time.Since(started)
+			ended = time.Since(started).Round(time.Microsecond)
 		}
 		switch {
 		case *r > 1:
