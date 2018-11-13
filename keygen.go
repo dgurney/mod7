@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"mod7/oem"
 	"mod7/tendigit"
+	"mod7/validation"
 	"time"
 )
 
@@ -14,6 +15,7 @@ func main() {
 	d := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key).")
 	r := flag.Int("r", 1, "Generate n keys.")
 	t := flag.Bool("t", false, "Show how long the generation took.")
+	v := flag.String("v", "", "Validate a CD or OEM key")
 	flag.Parse()
 	switch {
 	case *r < 1:
@@ -25,6 +27,10 @@ func main() {
 	}
 	CDKeych := make(chan string)
 	OEMKeych := make(chan string)
+	if len(*v) > 0 {
+		validation.ValidateKey(*v)
+		return
+	}
 	for i := 0; i < *r; i++ {
 		switch {
 		case *d:
