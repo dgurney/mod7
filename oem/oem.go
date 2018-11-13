@@ -74,13 +74,23 @@ func generateThird(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 }
 
 // The fourth segment is truly irrelevant
-func generateFourth(ch chan int, wg *sync.WaitGroup, m *sync.Mutex) {
+func generateFourth(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	wg.Add(1)
 	defer wg.Done()
 	m.Lock()
-	var fourth int
-	for fourth < 10000 {
-		fourth = r.Intn(99999)
+	f := r.Intn(99999)
+	var fourth string
+	switch {
+	case f < 10:
+		fourth = "0000" + strconv.Itoa(f)
+	case f < 100 && f > 9:
+		fourth = "000" + strconv.Itoa(f)
+	case f < 1000 && f > 99:
+		fourth = "00" + strconv.Itoa(f)
+	case f < 10000 && f > 999:
+		fourth = "0" + strconv.Itoa(f)
+	default:
+		fourth = strconv.Itoa(f)
 	}
 	m.Unlock()
 	ch <- fourth
@@ -92,9 +102,9 @@ func GenerateOEM(ch chan string) {
 	var m sync.Mutex
 	dch := make(chan string)
 	tch := make(chan string)
-	fch := make(chan int)
+	fch := make(chan string)
 	go generateFirst(dch, &wg, &m)
 	go generateThird(tch, &wg, &m)
 	go generateFourth(fch, &wg, &m)
-	ch <- <-dch + "-OEM-0" + <-tch + "-" + strconv.Itoa(<-fch)
+	ch <- <-dch + "-OEM-0" + <-tch + "-" + <-fch
 }
