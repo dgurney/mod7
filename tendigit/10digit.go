@@ -22,8 +22,8 @@ func genSite(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	invalidSites := []int{333, 444, 555, 666, 777, 888, 999}
 	for _, v := range invalidSites {
 		if v == s {
-			// Site number is invalid, so we must obliterate it
-			s = 69
+			// Site number is invalid, so we replace it with a guaranteed valid number
+			s = r.Intn(300)
 		}
 	}
 
@@ -40,7 +40,7 @@ func genSite(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 }
 
 // Generate the second segment of the key. The digit sum of the seven numbers must be divisible by seven.
-// The last digit is the "check digit". The check digit cannot be 0 or >=8.
+// The last digit is the check digit. The check digit cannot be 0 or >=8.
 func genSeven(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	wg.Add(1)
 	defer wg.Done()
