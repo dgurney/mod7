@@ -60,7 +60,7 @@ func main() {
 		}
 		if ended < 1 {
 			// Oh Windows...
-			fmt.Println("Could not display timestamp correctly :(")
+			fmt.Println("Could not display elapsed time correctly :(")
 			return
 		}
 		switch {
