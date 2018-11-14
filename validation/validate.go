@@ -33,7 +33,6 @@ func validateCDKey(key string) error {
 	if err != nil {
 		return fmt.Errorf("the second segment isn't a number")
 	}
-
 	invalidSites := map[int64]int{333: 333, 444: 444, 555: 555, 666: 666, 777: 777, 888: 888, 999: 999}
 	_, invalid := invalidSites[site]
 	if invalid {
@@ -45,7 +44,6 @@ func validateCDKey(key string) error {
 	if !checkdigitCheck(c) {
 		fmt.Println("The second segment is invalid: the last digit cannot be 0 or >= 8.")
 	}
-
 	// Split the second segment to individual digits for the division check.
 	sum := digitsum(main)
 	if sum%7 != 0 {
