@@ -37,19 +37,19 @@ func validateCDKey(key string) error {
 	invalidSites := map[int64]int{333: 333, 444: 444, 555: 555, 666: 666, 777: 777, 888: 888, 999: 999}
 	_, invalid := invalidSites[site]
 	if invalid {
-		fmt.Println("The site number is invalid: site number cannot be 333, 444, 555, 666, 777, 888, or 999.")
+		fmt.Println("The site number is invalid: cannot be 333, 444, 555, 666, 777, 888, or 999.")
 	}
 
 	c := strconv.Itoa(int(main))
 	// We must check the check digit.
 	if !checkdigitCheck(c) {
-		fmt.Println("The second segment of the key is invalid: the last digit cannot be 0 or >= 8.")
+		fmt.Println("The second segment is invalid: the last digit cannot be 0 or >= 8.")
 	}
 
 	// Split the second segment to individual digits for the division check.
 	sum := digitsum(main)
 	if sum%7 != 0 {
-		fmt.Printf("The second segment of the key is invalid: the digit sum (%d) must be divisible by 7.", sum)
+		fmt.Printf("The second segment is invalid: the digit sum (%d) must be divisible by 7.\n", sum)
 	}
 	return nil
 }
@@ -65,7 +65,7 @@ func validateOEM(key string) error {
 	}
 	julian, err := strconv.ParseInt(key[0:3], 10, 0)
 	if julian == 0 || julian > 366 {
-		fmt.Println("The date is invalid: date has to be 001-366.")
+		fmt.Println("The date is invalid: valid date range 001-366.")
 	}
 	year := key[3:5]
 	validYears := map[string]string{"95": "95", "96": "96", "97": "97", "98": "98", "99": "99", "00": "00", "01": "01", "02": "02", "03": "03"}
@@ -81,12 +81,12 @@ func validateOEM(key string) error {
 	c := strconv.Itoa(int(th))
 	// We must check the check digit.
 	if !checkdigitCheck(c) {
-		fmt.Println("The third segment of the key is invalid: the last digit cannot be 0 or >= 8.")
+		fmt.Println("The third segment is invalid: last digit cannot be 0 or >= 8.")
 	}
 	// Split the third segment to individual digits for the division check.
 	sum := digitsum(th)
 	if sum%7 != 0 {
-		fmt.Printf("The third segment of the key is invalid: the digit sum (%d) must be divisible by 7.", sum)
+		fmt.Printf("The third segment is invalid: digit sum (%d) must be divisible by 7.\n", sum)
 	}
 	return nil
 }
@@ -96,12 +96,12 @@ func ValidateKey(k string) {
 	// Make sure the provided key has a chance of being valid.
 	switch {
 	case len(k) == 11 && k[3:4] == "-":
-		fmt.Printf("%s could be a valid CD key. The key is valid if you get no output.\n", k)
+		fmt.Printf("%s is valid if you get no output.\n", k)
 		if err := validateCDKey(k); err != nil {
 			fmt.Println("Unable to validate key:", err)
 		}
 	case len(k) == 23 && k[5:6] == "-" && k[9:10] == "-" && k[17:18] == "-" && len(k[18:]) == 5:
-		fmt.Printf("%s could be a valid OEM key. The key is valid if you get no output.\n", k)
+		fmt.Printf("%s is valid if you get no output.\n", k)
 		if err := validateOEM(k); err != nil {
 			fmt.Println("Unable to validate key:", err)
 		}

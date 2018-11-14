@@ -45,7 +45,7 @@ func main() {
 			fmt.Println(<-CDKeych)
 			fmt.Println(<-OEMKeych)
 		default:
-			fmt.Println("You must specify what you want to generate! Usage:")
+			fmt.Println("You must specify what you want to do! Usage:")
 			flag.PrintDefaults()
 			return
 		}
