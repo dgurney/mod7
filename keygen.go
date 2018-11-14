@@ -60,14 +60,19 @@ func main() {
 		}
 		if ended < 1 {
 			// Oh Windows...
-			fmt.Println("Could not display sub-millisecond timestamp correctly :(")
+			fmt.Println("Could not display timestamp correctly :(")
 			return
 		}
 		switch {
-		case *r > 1:
-			fmt.Printf("Took %s to generate %d keys.\n", ended, *r)
-		case *r == 1:
-			fmt.Printf("Took %s to generate %d key.\n", ended, *r)
+		default:
+			switch {
+			case *r > 1:
+				fmt.Printf("Took %s to generate %d keys.\n", ended, *r)
+			case *r == 1:
+				fmt.Printf("Took %s to generate %d key.\n", ended, *r)
+			}
+		case *b:
+			fmt.Printf("Took %s to generate %d keys.\n", ended, *r*2)
 		}
 	}
 }
