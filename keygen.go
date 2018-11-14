@@ -58,6 +58,11 @@ func main() {
 		default:
 			ended = time.Since(started).Round(time.Microsecond)
 		}
+		if ended < 1 {
+			// Oh Windows...
+			fmt.Println("Could not display sub-millisecond timestamp correctly :(")
+			return
+		}
 		switch {
 		case *r > 1:
 			fmt.Printf("Took %s to generate %d keys.\n", ended, *r)
