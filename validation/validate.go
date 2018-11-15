@@ -94,12 +94,12 @@ func ValidateKey(k string) {
 	// Make sure the provided key has a chance of being valid.
 	switch {
 	case len(k) == 11 && k[3:4] == "-":
-		fmt.Printf("%s is valid if you get no output.\n", k)
+		fmt.Printf("%s is valid if you get no further output.\n", k)
 		if err := validateCDKey(k); err != nil {
 			fmt.Println("Unable to validate key:", err)
 		}
 	case len(k) == 23 && k[5:6] == "-" && k[9:10] == "-" && k[17:18] == "-" && len(k[18:]) == 5:
-		fmt.Printf("%s is valid if you get no output.\n", k)
+		fmt.Printf("%s is valid if you get no further output.\n", k)
 		if err := validateOEM(k); err != nil {
 			fmt.Println("Unable to validate key:", err)
 		}
