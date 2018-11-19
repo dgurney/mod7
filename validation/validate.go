@@ -40,14 +40,13 @@ func validateCDKey(key string) error {
 	}
 
 	c := strconv.Itoa(int(main))
-	// We must check the check digit.
+	secondSegmentInvalid := "The second segment is invalid:"
 	if !checkdigitCheck(c) {
-		fmt.Println("The second segment is invalid: the last digit cannot be 0 or >= 8.")
+		fmt.Println(secondSegmentInvalid, "the last digit cannot be 0 or >= 8.")
 	}
-	// Split the second segment to individual digits for the division check.
 	sum := digitsum(main)
 	if sum%7 != 0 {
-		fmt.Printf("The second segment is invalid: the digit sum (%d) must be divisible by 7.\n", sum)
+		fmt.Printf("%s the digit sum (%d) must be divisible by 7.\n", secondSegmentInvalid, sum)
 	}
 	return nil
 }
@@ -73,35 +72,36 @@ func validateOEM(key string) error {
 	}
 
 	third := key[10:17]
+	thirdSegmentInvalid := "The third segment is invalid:"
 	if string(third[0]) != "0" {
-		fmt.Println("The third segment is invalid: must begin with a 0.")
+		fmt.Println(thirdSegmentInvalid, "must begin with a 0.")
 	}
 	c := strconv.Itoa(int(th))
-	// We must check the check digit.
 	if !checkdigitCheck(c) {
-		fmt.Println("The third segment is invalid: last digit cannot be 0 or >= 8.")
+		fmt.Println(thirdSegmentInvalid, "last digit cannot be 0 or >= 8.")
 	}
-	// Split the third segment to individual digits for the division check.
 	sum := digitsum(th)
 	if sum%7 != 0 {
-		fmt.Printf("The third segment is invalid: digit sum (%d) must be divisible by 7.\n", sum)
+		fmt.Printf("%s digit sum (%d) must be divisible by 7.\n", thirdSegmentInvalid, sum)
 	}
 	return nil
 }
 
 // ValidateKey validates the provided OEM or CD key.
 func ValidateKey(k string) {
+	maybeValidMessage := "%s is valid if you get no further output.\n"
+	unableToValidate := "Unable to validate key:"
 	// Make sure the provided key has a chance of being valid.
 	switch {
 	case len(k) == 11 && k[3:4] == "-":
-		fmt.Printf("%s is valid if you get no further output.\n", k)
+		fmt.Printf(maybeValidMessage, k)
 		if err := validateCDKey(k); err != nil {
-			fmt.Println("Unable to validate key:", err)
+			fmt.Println(unableToValidate, err)
 		}
 	case len(k) == 23 && k[5:6] == "-" && k[9:10] == "-" && k[17:18] == "-" && len(k[18:]) == 5:
-		fmt.Printf("%s is valid if you get no further output.\n", k)
+		fmt.Printf(maybeValidMessage, k)
 		if err := validateOEM(k); err != nil {
-			fmt.Println("Unable to validate key:", err)
+			fmt.Println(unableToValidate, err)
 		}
 	default:
 		fmt.Printf("%s doesn't even resemble a valid key.\n", k)
