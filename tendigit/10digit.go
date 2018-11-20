@@ -18,7 +18,7 @@ func genSite(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	m.Lock()
 	var site string
 	s := r.Intn(998)
-	// Technically we could omit 999 as we don't generate a number that high, but we include it for posterity anyway.
+	// Technically 999 could be omitted as we don't generate a number that high, but we include it for posterity anyway.
 	invalidSites := []int{333, 444, 555, 666, 777, 888, 999}
 	for _, v := range invalidSites {
 		if v == s {
