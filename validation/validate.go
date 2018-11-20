@@ -8,7 +8,7 @@ import (
 
 func checkdigitCheck(c string) bool {
 	// Check digit cannot be 0 or >= 8.
-	if c[len(c)-1:] == "0" || c[len(c)-1:] == "8" || c[len(c)-1:] == "9" {
+	if c[len(c)-1:] == "0" || c[len(c)-1:] >= "8" {
 		return false
 	}
 	return true
