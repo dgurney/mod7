@@ -76,7 +76,7 @@ func genSeven(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	ch <- final
 }
 
-// Generate10digit generates a 10-digit cd key.
+// Generate10digit generates a 10-digit CD key.
 func Generate10digit(ch chan string) {
 	var wg sync.WaitGroup
 	var m sync.Mutex

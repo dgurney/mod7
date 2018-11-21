@@ -95,7 +95,7 @@ func generateFourth(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	ch <- fourth
 }
 
-// GenerateOEM generates an OEM key (duh).
+// GenerateOEM generates an OEM key.
 func GenerateOEM(ch chan string) {
 	var wg sync.WaitGroup
 	var m sync.Mutex
