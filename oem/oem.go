@@ -18,10 +18,17 @@ func generateFirst(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	defer wg.Done()
 	m.Lock()
 	d := r.Intn(366)
+	nonzero := false
+	for !nonzero {
+		switch {
+		case d != 0:
+			nonzero = true
+		default:
+			d = r.Intn(366)
+		}
+	}
 	var date string
 	switch {
-	case d == 0:
-		date = "123"
 	case d < 100 && d > 9:
 		date = "0" + strconv.Itoa(d)
 	case d < 10:
