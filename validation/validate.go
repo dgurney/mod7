@@ -60,6 +60,10 @@ func validateOEM(key string) error {
 	if err != nil {
 		return fmt.Errorf("the third segment is not a number")
 	}
+	_, err = strconv.ParseInt(key[18:], 10, 0)
+	if err != nil {
+		return fmt.Errorf("the fourth segment is not a number")
+	}
 	julian, err := strconv.ParseInt(key[0:3], 10, 0)
 	if julian == 0 || julian > 366 {
 		fmt.Println("The date is invalid: valid date range 001-366.")
