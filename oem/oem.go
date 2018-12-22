@@ -65,14 +65,11 @@ func generateThird(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 		for _, dig := range serial {
 			sum += dig
 		}
-		switch {
-		case sum%7 == 0:
+		if sum%7 == 0 {
 			valid = true
 			for _, digits := range serial {
 				final += strconv.Itoa(digits)
 			}
-		default:
-			valid = false
 		}
 	}
 	m.Unlock()
