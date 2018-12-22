@@ -27,7 +27,7 @@ func generateFirst(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 			d = r.Intn(366)
 		}
 	}
-	var date string
+	date := ""
 	switch {
 	case d < 100 && d > 9:
 		date = "0" + strconv.Itoa(d)
@@ -48,8 +48,8 @@ func generateThird(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	wg.Add(1)
 	defer wg.Done()
 	m.Lock()
-	var final string
-	var valid bool
+	final := ""
+	valid := false
 	for !valid {
 		// We generate only 6 digits because of the "first digit must be 0" rule
 		for i := 0; i < 6; i++ {
@@ -82,7 +82,7 @@ func generateFourth(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	defer wg.Done()
 	m.Lock()
 	f := r.Intn(99999)
-	var fourth string
+	fourth := ""
 	switch {
 	case f < 10:
 		fourth = "0000" + strconv.Itoa(f)

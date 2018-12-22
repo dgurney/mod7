@@ -16,7 +16,7 @@ func genSite(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	wg.Add(1)
 	defer wg.Done()
 	m.Lock()
-	var site string
+	site := ""
 	s := r.Intn(998)
 	// Technically 999 could be omitted as we don't generate a number that high, but we include it for posterity anyway.
 	invalidSites := []int{333, 444, 555, 666, 777, 888, 999}
@@ -45,8 +45,8 @@ func genSeven(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 	wg.Add(1)
 	defer wg.Done()
 	m.Lock()
-	var valid bool
-	var final string
+	valid := false
+	final := ""
 	for !valid {
 		for i := 0; i < 7; i++ {
 			serial[i] = r.Intn(9)
