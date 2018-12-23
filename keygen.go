@@ -18,6 +18,7 @@ func main() {
 	r := flag.Int("r", 1, "Generate n keys.")
 	t := flag.Bool("t", false, "Show how long the generation took.")
 	v := flag.String("v", "", "Validate a CD or OEM key")
+	bv := flag.String("bv", "", "Batch validate a key file. The key file should be a plain text file (with a .txt extension) with 1 key per line.")
 	ver := flag.Bool("ver", false, "Show version number and exit")
 	flag.Parse()
 	if *r < 1 {
@@ -33,8 +34,12 @@ func main() {
 		fmt.Printf("mod7 v%s by Daniel Gurney\n", version)
 		return
 	}
+	if len(*bv) > 0 {
+		validation.ValidateKey("batchCheck", *bv)
+		return
+	}
 	if len(*v) > 0 {
-		validation.ValidateKey(*v)
+		validation.ValidateKey(*v, "")
 		return
 	}
 	for i := 0; i < *r; i++ {

@@ -2,7 +2,10 @@
 package validation
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -92,23 +95,53 @@ func validateOEM(key string) error {
 }
 
 // ValidateKey validates the provided OEM or CD key.
-func ValidateKey(k string) {
+func ValidateKey(k, kf string) {
+	batchCheck := false
+	if k == "batchCheck" {
+		batchCheck = true
+	}
 	maybeValidMessage := "%s is valid if you get no further output.\n"
 	unableToValidate := "Unable to validate key:"
-	// Make sure the provided key has a chance of being valid.
 	switch {
-	case len(k) == 11 && k[3:4] == "-":
-		fmt.Printf(maybeValidMessage, k)
-		if err := validateCDKey(k); err != nil {
-			fmt.Println(unableToValidate, err)
+	case !batchCheck:
+		// Make sure the provided key has a chance of being valid.
+		switch {
+		case len(k) == 11 && k[3:4] == "-":
+			fmt.Printf(maybeValidMessage, k)
+			if err := validateCDKey(k); err != nil {
+				fmt.Println(unableToValidate, err)
+			}
+		case len(k) == 23 && k[5:6] == "-" && k[9:10] == "-" && k[17:18] == "-" && len(k[18:]) == 5:
+			fmt.Printf(maybeValidMessage, k)
+			if err := validateOEM(k); err != nil {
+				fmt.Println(unableToValidate, err)
+			}
+		default:
+			fmt.Printf("%s doesn't even resemble a valid key.\n", k)
 		}
-	case len(k) == 23 && k[5:6] == "-" && k[9:10] == "-" && k[17:18] == "-" && len(k[18:]) == 5:
-		fmt.Printf(maybeValidMessage, k)
-		if err := validateOEM(k); err != nil {
-			fmt.Println(unableToValidate, err)
+	case batchCheck:
+		keyfile, err := os.Open(kf)
+		if err != nil {
+			fmt.Println("Unable to open key file:", err)
+			return
 		}
-	default:
-		fmt.Printf("%s doesn't even resemble a valid key.\n", k)
+		kfStat, err := os.Stat(kf)
+		if err != nil {
+			fmt.Println("Unable to stat key file:", err)
+			return
+		}
+		if filepath.Ext(kfStat.Name()) != ".txt" {
+			fmt.Println("This file doesn't have a .txt extension. Nothing interesting will happen if you pass anything other than a plain text file with the required characteristics.")
+			return
+		}
+		defer keyfile.Close()
+		var keys []string
+
+		scanner := bufio.NewScanner(keyfile)
+		for scanner.Scan() {
+			keys = append(keys, scanner.Text())
+		}
+		fmt.Println(keys)
 	}
 
 }
