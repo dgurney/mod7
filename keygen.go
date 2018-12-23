@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const version = "1.0.0"
+
 func main() {
 	b := flag.Bool("b", false, "Generate both keys.")
 	o := flag.Bool("o", false, "Generate an OEM key.")
@@ -16,9 +18,9 @@ func main() {
 	r := flag.Int("r", 1, "Generate n keys.")
 	t := flag.Bool("t", false, "Show how long the generation took.")
 	v := flag.String("v", "", "Validate a CD or OEM key")
+	ver := flag.Bool("ver", false, "Show version number and exit")
 	flag.Parse()
-	switch {
-	case *r < 1:
+	if *r < 1 {
 		*r = 1
 	}
 	var started time.Time
@@ -27,6 +29,10 @@ func main() {
 	}
 	CDKeych := make(chan string)
 	OEMKeych := make(chan string)
+	if *ver {
+		fmt.Printf("mod7 v%s by Daniel Gurney\n", version)
+		return
+	}
 	if len(*v) > 0 {
 		validation.ValidateKey(*v)
 		return
