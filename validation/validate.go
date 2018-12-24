@@ -141,7 +141,23 @@ func ValidateKey(k, kf string) {
 		for scanner.Scan() {
 			keys = append(keys, scanner.Text())
 		}
-		fmt.Println(keys)
+		// Make sure the provided keys have a chance of being valid.
+		for i := 0; i < len(keys); i++ {
+			switch {
+			case len(keys[i]) == 11 && keys[i][3:4] == "-":
+				fmt.Printf(maybeValidMessage, keys[i])
+				if err := validateCDKey(keys[i]); err != nil {
+					fmt.Println(unableToValidate, err)
+				}
+			case len(keys[i]) == 23 && keys[i][5:6] == "-" && keys[i][9:10] == "-" && keys[i][17:18] == "-" && len(keys[i][18:]) == 5:
+				fmt.Printf(maybeValidMessage, keys[i])
+				if err := validateOEM(keys[i]); err != nil {
+					fmt.Println(unableToValidate, err)
+				}
+			default:
+				fmt.Printf("%s doesn't even resemble a valid key.\n", keys[i])
+			}
+		}
 	}
 
 }
