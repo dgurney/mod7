@@ -1,5 +1,5 @@
 COMMIT=`git rev-parse --short HEAD`
-LDFLAGS=-ldflags "-X main.gitVersion=${COMMIT}"
+LDFLAGS=-ldflags "-w -X main.gitVersion=${COMMIT}"
 PROGRAM=mod7
 
 install:
