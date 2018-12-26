@@ -12,9 +12,7 @@ var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 var serial [7]int
 
 // Generate the so-called "site" number, which is the first segment of the key.
-func genSite(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
-	wg.Add(1)
-	defer wg.Done()
+func genSite(ch chan string, m *sync.Mutex) {
 	m.Lock()
 	site := ""
 	s := r.Intn(998)
@@ -41,9 +39,7 @@ func genSite(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 
 // Generate the second segment of the key. The digit sum of the seven numbers must be divisible by seven.
 // The last digit is the check digit. The check digit cannot be 0 or >=8.
-func genSeven(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
-	wg.Add(1)
-	defer wg.Done()
+func genSeven(ch chan string, m *sync.Mutex) {
 	m.Lock()
 	valid := false
 	final := ""
@@ -75,12 +71,10 @@ func genSeven(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 
 // Generate10digit generates a 10-digit CD key.
 func Generate10digit(ch chan string) {
-	var wg sync.WaitGroup
 	var m sync.Mutex
 	sch := make(chan string)
 	dch := make(chan string)
-	go genSite(sch, &wg, &m)
-	go genSeven(dch, &wg, &m)
+	go genSite(sch, &m)
+	go genSeven(dch, &m)
 	ch <- <-sch + "-" + <-dch
-	wg.Wait()
 }

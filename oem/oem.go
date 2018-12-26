@@ -13,9 +13,7 @@ var serial [6]int
 
 // Generate the first segment of the key. The first three digits represent the julian date the COA was printed (001 to 366), and the last two are the year.
 // The year cannot be below 95 or above 03 (not Y2K-compliant D:).
-func generateFirst(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
-	wg.Add(1)
-	defer wg.Done()
+func generateFirst(ch chan string, m *sync.Mutex) {
 	m.Lock()
 	d := r.Intn(366)
 	nonzero := false
@@ -44,9 +42,7 @@ func generateFirst(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 
 // The third segment (OEM is the second) must begin with a zero, but otherwise it follows the same rule as the second segment of 10-digit keys:
 // The digit sum must be divisible by seven, and the check digit cannot be 0 or >=8.
-func generateThird(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
-	wg.Add(1)
-	defer wg.Done()
+func generateThird(ch chan string, m *sync.Mutex) {
 	m.Lock()
 	final := ""
 	valid := false
@@ -77,9 +73,7 @@ func generateThird(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 }
 
 // The fourth segment is truly irrelevant
-func generateFourth(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
-	wg.Add(1)
-	defer wg.Done()
+func generateFourth(ch chan string, m *sync.Mutex) {
 	m.Lock()
 	f := r.Intn(99999)
 	fourth := ""
@@ -101,13 +95,12 @@ func generateFourth(ch chan string, wg *sync.WaitGroup, m *sync.Mutex) {
 
 // GenerateOEM generates an OEM key.
 func GenerateOEM(ch chan string) {
-	var wg sync.WaitGroup
 	var m sync.Mutex
 	dch := make(chan string)
 	tch := make(chan string)
 	fch := make(chan string)
-	go generateFirst(dch, &wg, &m)
-	go generateThird(tch, &wg, &m)
-	go generateFourth(fch, &wg, &m)
+	go generateFirst(dch, &m)
+	go generateThird(tch, &m)
+	go generateFourth(fch, &m)
 	ch <- <-dch + "-OEM-0" + <-tch + "-" + <-fch
 }
