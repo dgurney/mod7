@@ -30,7 +30,7 @@ func main() {
 	o := flag.Bool("o", false, "Generate an OEM key.")
 	d := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key).")
 	r := flag.Int("r", 1, "Generate n keys.")
-	t := flag.Bool("t", false, "Show how long the generation took.")
+	t := flag.Bool("t", false, "Show how long the generation or batch validation took.")
 	v := flag.String("v", "", "Validate a CD or OEM key")
 	bv := flag.String("bv", "", "Batch validate a key file. The key file should be a plain text file (with a .txt extension) with 1 key per line.")
 	ver := flag.Bool("ver", false, "Show version number and exit")
