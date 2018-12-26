@@ -1,11 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"mod7/oem"
 	"mod7/tendigit"
 	"mod7/validation"
+	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -35,11 +38,39 @@ func main() {
 		return
 	}
 	if len(*bv) > 0 {
-		validation.ValidateKey("batchCheck", *bv)
+		if filepath.Ext(*bv) != ".txt" {
+			fmt.Println("The key file must be a plain text file with a .txt extension. Tricking this check will not do anything interesting, so don't bother.")
+			return
+		}
+		keyfile, err := os.Open(*bv)
+		if err != nil {
+			fmt.Println("Unable to open key file:", err)
+			return
+		}
+		defer keyfile.Close()
+		var keys []string
+		vch := make(chan bool)
+		scanner := bufio.NewScanner(keyfile)
+		for scanner.Scan() {
+			keys = append(keys, scanner.Text())
+		}
+		if len(keys) == 0 {
+			fmt.Println("The key file is empty.")
+			return
+		}
+		for i := 0; i < len(keys); i++ {
+			go validation.BatchValidate(keys[i], vch)
+			switch {
+			default:
+				fmt.Printf("%s is invalid\n", keys[i])
+			case <-vch:
+				fmt.Printf("%s is valid\n", keys[i])
+			}
+		}
 		return
 	}
 	if len(*v) > 0 {
-		validation.ValidateKey(*v, "")
+		validation.ValidateKey(*v)
 		return
 	}
 	for i := 0; i < *r; i++ {
