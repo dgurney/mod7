@@ -59,12 +59,14 @@ func main() {
 			return
 		}
 		for i := 0; i < len(keys); i++ {
-			go validation.BatchValidate(keys[i], vch)
-			switch {
-			default:
-				fmt.Printf("%s is invalid\n", keys[i])
-			case <-vch:
-				fmt.Printf("%s is valid\n", keys[i])
+			if keys[i] != "" {
+				go validation.BatchValidate(keys[i], vch)
+				switch {
+				default:
+					fmt.Printf("%s is invalid\n", keys[i])
+				case <-vch:
+					fmt.Printf("%s is valid\n", keys[i])
+				}
 			}
 		}
 		return
