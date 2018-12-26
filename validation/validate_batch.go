@@ -84,9 +84,9 @@ func BatchValidate(k string, v chan bool) {
 	// Determine key type
 	switch {
 	case len(k) == 11 && k[3:4] == "-":
-		go batchValidateCDKey(k, v)
+		batchValidateCDKey(k, v)
 	case len(k) == 23 && k[5:6] == "-" && k[9:10] == "-" && k[17:18] == "-" && len(k[18:]) == 5:
-		go batchValidateOEMKey(k, v)
+		batchValidateOEMKey(k, v)
 	default:
 		v <- false
 	}
