@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-const version = "1.2.2"
+const version = "1.2.3"
 
 func main() {
 	b := flag.Bool("b", false, "Generate both keys.")
