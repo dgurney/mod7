@@ -14,6 +14,17 @@ import (
 
 const version = "1.2.3"
 
+var gitVersion string
+
+func getVersion() string {
+	switch {
+	default:
+		return version + " (" + gitVersion + ")"
+	case len(gitVersion) == 0:
+		return version
+	}
+}
+
 func main() {
 	b := flag.Bool("b", false, "Generate both keys.")
 	o := flag.Bool("o", false, "Generate an OEM key.")
@@ -34,7 +45,7 @@ func main() {
 		started = time.Now()
 	}
 	if *ver {
-		fmt.Printf("mod7 v%s by Daniel Gurney\n", version)
+		fmt.Printf("mod7 v%s by Daniel Gurney\n", getVersion())
 		return
 	}
 	if len(*bv) > 0 {
