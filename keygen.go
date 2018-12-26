@@ -28,11 +28,11 @@ func main() {
 		*r = 1
 	}
 	var started time.Time
+	CDKeych := make(chan string)
+	OEMKeych := make(chan string)
 	if *t {
 		started = time.Now()
 	}
-	CDKeych := make(chan string)
-	OEMKeych := make(chan string)
 	if *ver {
 		fmt.Printf("mod7 v%s by Daniel Gurney\n", version)
 		return
@@ -54,11 +54,12 @@ func main() {
 		for scanner.Scan() {
 			keys = append(keys, scanner.Text())
 		}
-		if len(keys) == 0 {
+		kl := len(keys)
+		if kl == 0 {
 			fmt.Println("The key file is empty.")
 			return
 		}
-		for i := 0; i < len(keys); i++ {
+		for i := 0; i < kl; i++ {
 			if keys[i] != "" {
 				go validation.BatchValidate(keys[i], vch)
 				switch {
@@ -67,6 +68,26 @@ func main() {
 				case <-vch:
 					fmt.Printf("%s is valid\n", keys[i])
 				}
+			}
+		}
+		if *t {
+			var ended time.Duration
+			switch {
+			case time.Since(started).Round(time.Second) > 1:
+				ended = time.Since(started).Round(time.Millisecond)
+			default:
+				ended = time.Since(started).Round(time.Microsecond)
+			}
+			if ended < 1 {
+				// Oh Windows...
+				fmt.Println("Could not display elapsed time correctly :(")
+				return
+			}
+			switch {
+			case len(keys) > 1:
+				fmt.Printf("Took %s to validate %d keys.\n", ended, kl)
+			default:
+				fmt.Printf("Took %s to validate %d key.\n", ended, kl)
 			}
 		}
 		return
