@@ -79,7 +79,7 @@ func batchValidateOEMKey(key string, v chan bool) {
 
 }
 
-// BatchValidate validates an array of keys. Compared to the regular validation function, the output is terse for easier grepping.
+// BatchValidate is used to validate individual keys from an array. Compared to the regular validation function, the output is terse for easier grepping.
 func BatchValidate(k string, v chan bool) {
 	// Determine key type
 	switch {
