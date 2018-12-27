@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-const version = "1.2.5"
+const version = "1.2.6"
 
 var gitCommit string
 var gitBranch string
