@@ -14,13 +14,14 @@ import (
 
 const version = "1.2.5"
 
-var gitVersion string
+var gitCommit string
+var gitBranch string
 
 func getVersion() string {
 	switch {
 	default:
-		return version + " (" + gitVersion + ")"
-	case len(gitVersion) == 0:
+		return version + " (" + gitBranch + "." + gitCommit + ")"
+	case len(gitCommit) == 0 || len(gitBranch) == 0:
 		return version
 	}
 }
@@ -33,7 +34,7 @@ func main() {
 	t := flag.Bool("t", false, "Show how long the generation or batch validation took.")
 	v := flag.String("v", "", "Validate a CD or OEM key")
 	bv := flag.String("bv", "", "Batch validate a key file. The key file should be a plain text file (with a .txt extension) with 1 key per line.")
-	ver := flag.Bool("ver", false, "Show version number and exit")
+	ver := flag.Bool("ver", false, "Show version information and exit")
 	flag.Parse()
 	if *r < 1 {
 		*r = 1
