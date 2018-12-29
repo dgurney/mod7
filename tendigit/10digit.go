@@ -1,4 +1,4 @@
-// Package tendigit handles the generation and validation of an "XXX-XXXXXXX"-style product key.
+// Package tendigit handles generation of CD keys (XXX-XXXXXXX).
 package tendigit
 
 import (

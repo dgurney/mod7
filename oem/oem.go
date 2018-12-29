@@ -1,4 +1,4 @@
-// Package oem handles generating and validating OEM keys (XXXXX-OEM-XXXXXXX-XXXXX).
+// Package oem handles generation of OEM keys (XXXXX-OEM-XXXXXXX-XXXXX).
 package oem
 
 import (
