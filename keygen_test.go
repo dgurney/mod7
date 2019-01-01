@@ -51,7 +51,6 @@ func TestBatchValidation(t *testing.T) {
 		{"000-0000007"},
 		{"10000-OEM-0000007-11111"},
 		{"32299-OEM-0840621-16752"},
-		{"10000-OEM-0000077-11111"},
 		{"118-5688143"},
 	}
 	invalidKeys := []struct {
