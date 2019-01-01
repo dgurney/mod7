@@ -42,7 +42,7 @@ func TestCD(t *testing.T) {
 	}
 }
 
-func TestBatch(t *testing.T) {
+func TestBatchValidation(t *testing.T) {
 	vch := make(chan bool)
 	validKeys := []struct {
 		key string
