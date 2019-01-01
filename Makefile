@@ -24,6 +24,6 @@ clean:
 test:
 	GOCACHE=off	go test ${PROGRAM}
 bench:
-	go test -bench=.
+	go test -run=sonic -bench=.
 cross: windows darwin freebsd linux
 all: install cross
