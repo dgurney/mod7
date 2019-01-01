@@ -22,8 +22,12 @@ linux:
 clean:
 	rm -rf build/
 test:
-	GOCACHE=off	go test ${PROGRAM}
+	GOCACHE=off	go test mod7/oem -cover
+	GOCACHE=off	go test mod7/tendigit -cover
+	GOCACHE=off	go test mod7/validation -cover
 bench:
-	go test -run=sonic -bench=.
+	go test -run=sonic mod7/oem -bench=.
+	go test -run=sonic mod7/tendigit -bench=.
+	go test -run=sonic mod7/validation -bench=.
 cross: windows darwin freebsd linux
 all: install cross
