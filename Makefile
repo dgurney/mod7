@@ -21,5 +21,9 @@ linux:
 	GOOS=linux GOARCH=386 go build ${LDFLAGS} -o build/linux/386/${PROGRAM} ${PROGRAM} 
 clean:
 	rm -rf build/
+test:
+	GOCACHE=off	go test ${PROGRAM}
+bench:
+	go test -bench=.
 cross: windows darwin freebsd linux
 all: install cross
