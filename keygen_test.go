@@ -20,7 +20,7 @@ func TestOEM(t *testing.T) {
 	for i := 0; i < len(ka); i++ {
 		go validation.BatchValidate(ka[i], vch)
 		if !<-vch {
-			t.Errorf("Received invalid key %s!", ka[i])
+			t.Errorf("Generated key %s is invalid!", ka[i])
 		}
 
 	}
@@ -36,7 +36,7 @@ func TestCD(t *testing.T) {
 	for i := 0; i < len(ka); i++ {
 		go validation.BatchValidate(ka[i], vch)
 		if !<-vch {
-			t.Errorf("Received invalid key %s!", ka[i])
+			t.Errorf("Generated key %s is invalid!", ka[i])
 		}
 
 	}
