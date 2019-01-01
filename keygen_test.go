@@ -9,6 +9,39 @@ import (
 	"testing"
 )
 
+func TestOEM(t *testing.T) {
+	ka := make([]string, 0)
+	och := make(chan string)
+	vch := make(chan bool)
+	for i := 0; i < 500000; i++ {
+		go oem.GenerateOEM(och)
+		ka = append(ka, <-och)
+	}
+	for i := 0; i < len(ka); i++ {
+		go validation.BatchValidate(ka[i], vch)
+		if !<-vch {
+			t.Errorf("Received invalid key %s!", ka[i])
+		}
+
+	}
+}
+func TestCD(t *testing.T) {
+	ka := make([]string, 0)
+	dch := make(chan string)
+	vch := make(chan bool)
+	for i := 0; i < 500000; i++ {
+		go oem.GenerateOEM(dch)
+		ka = append(ka, <-dch)
+	}
+	for i := 0; i < len(ka); i++ {
+		go validation.BatchValidate(ka[i], vch)
+		if !<-vch {
+			t.Errorf("Received invalid key %s!", ka[i])
+		}
+
+	}
+}
+
 func BenchmarkOEM100(b *testing.B) {
 	och := make(chan string)
 	for n := 0; n < b.N; n++ {
