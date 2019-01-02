@@ -24,6 +24,8 @@ func digitsum(num int64) int64 {
 	return s
 }
 
+// TODO: The rest of the file is entirely uncovered by testing.
+
 func validateCDKey(key string) error {
 	site, err := strconv.ParseInt(key[0:3], 10, 0)
 	if err != nil {

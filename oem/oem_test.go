@@ -23,7 +23,9 @@ func TestOEM(t *testing.T) {
 }
 
 func BenchmarkOEM100(b *testing.B) {
+	b.StopTimer()
 	och := make(chan string)
+	b.StartTimer()
 	for n := 0; n < b.N; n++ {
 		for i := 0; i < 100; i++ {
 			go GenerateOEM(och)
