@@ -87,6 +87,10 @@ func validateOEM(key string) error {
 		valid = false
 		fmt.Println("The year is invalid: cannot be less than 95 or above 03")
 	}
+	if key[6:9] != "OEM" {
+		valid = false
+		fmt.Println("The second segment is invalid: must be OEM (a real setup program would not allow you to change it).")
+	}
 
 	third := key[10:17]
 	thirdSegmentInvalid := "The third segment is invalid:"

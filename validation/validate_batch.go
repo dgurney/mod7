@@ -60,6 +60,10 @@ func batchValidateOEMKey(key string, v chan bool) {
 		v <- false
 		return
 	}
+	if key[6:9] != "OEM" {
+		v <- false
+		return
+	}
 	third := key[10:17]
 	if string(third[0]) != "0" {
 		v <- false

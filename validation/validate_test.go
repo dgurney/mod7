@@ -49,6 +49,8 @@ var invalidKeys = []struct {
 	{"1000a-OEM-0000007-11111"},
 	{"10000-OEM-00000a7-11111"},
 	{"10000-OEM-0000007-1111a"},
+	// Invalid second segment
+	{"10000-SEX-0000007-00000"},
 }
 
 func TestSingleValidation(t *testing.T) {
