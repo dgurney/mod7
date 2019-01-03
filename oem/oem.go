@@ -15,7 +15,7 @@ var serial [6]int
 // The year cannot be below 95 or above 03 (not Y2K-compliant D:).
 func generateFirst(ch chan string, m *sync.Mutex) {
 	m.Lock()
-	d := r.Intn(366)
+	var d int
 	nonzero := false
 	for !nonzero {
 		switch {
