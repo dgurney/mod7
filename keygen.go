@@ -12,16 +12,17 @@ import (
 	"time"
 )
 
+// Used if mod7 is not built using the makefile.
 const version = "1.2.7"
 
-var gitCommit string
-var gitBranch string
+// git describe --tags --dirty
+var gitVersion string
 
 func getVersion() string {
 	switch {
 	default:
-		return version + " (" + gitBranch + "." + gitCommit + ")"
-	case len(gitCommit) == 0 || len(gitBranch) == 0:
+		return gitVersion
+	case len(gitVersion) == 0:
 		return version
 	}
 }
