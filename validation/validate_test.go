@@ -6,18 +6,18 @@ import (
 	"testing"
 )
 
-var validKeys = []struct {
+type keyStruct struct {
 	key string
-}{
+}
+
+var validKeys = []keyStruct{
 	{"111-1111111"},
 	{"000-0000007"},
 	{"10000-OEM-0000007-00000"},
 	{"32299-OEM-0840621-16752"},
 	{"118-5688143"},
 }
-var invalidKeys = []struct {
-	key string
-}{
+var invalidKeys = []keyStruct{
 	// Not even close to a valid key
 	{"1"},
 	{"10000-OEM-0000007-1"},
