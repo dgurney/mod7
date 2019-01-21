@@ -11,7 +11,7 @@ import (
 var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 var serial [7]int
 
-// Generate the so-called "site" number, which is the first segment of the key.
+// Generate the so-called site number, which is the first segment of the key.
 func genSite(ch chan string, m *sync.Mutex) {
 	m.Lock()
 	site := ""
