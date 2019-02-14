@@ -2,6 +2,7 @@
 package tendigit
 
 import (
+	"fmt"
 	"math/rand"
 	"strconv"
 	"sync"
@@ -25,14 +26,7 @@ func genSite(ch chan string, m *sync.Mutex) {
 		}
 	}
 
-	switch {
-	case s < 10:
-		site = "00" + strconv.Itoa(s)
-	case s < 100 && s > 9:
-		site = "0" + strconv.Itoa(s)
-	default:
-		site = strconv.Itoa(s)
-	}
+	site = fmt.Sprintf("%03d", s)
 	m.Unlock()
 	ch <- site
 }

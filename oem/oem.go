@@ -2,6 +2,7 @@
 package oem
 
 import (
+	"fmt"
 	"math/rand"
 	"strconv"
 	"sync"
@@ -25,15 +26,7 @@ func generateFirst(ch chan string, m *sync.Mutex) {
 			d = r.Intn(366)
 		}
 	}
-	date := ""
-	switch {
-	case d < 100 && d > 9:
-		date = "0" + strconv.Itoa(d)
-	case d < 10:
-		date = "00" + strconv.Itoa(d)
-	default:
-		date = strconv.Itoa(d)
-	}
+	date := fmt.Sprintf("%03d", d)
 	years := []string{"95", "96", "97", "98", "99", "00", "01", "02", "03"}
 	year := years[r.Intn(len(years))]
 	m.Unlock()
@@ -76,19 +69,7 @@ func generateThird(ch chan string, m *sync.Mutex) {
 func generateFourth(ch chan string, m *sync.Mutex) {
 	m.Lock()
 	f := r.Intn(99999)
-	fourth := ""
-	switch {
-	case f < 10:
-		fourth = "0000" + strconv.Itoa(f)
-	case f < 100 && f > 9:
-		fourth = "000" + strconv.Itoa(f)
-	case f < 1000 && f > 99:
-		fourth = "00" + strconv.Itoa(f)
-	case f < 10000 && f > 999:
-		fourth = "0" + strconv.Itoa(f)
-	default:
-		fourth = strconv.Itoa(f)
-	}
+	fourth := fmt.Sprintf("%05d", f)
 	m.Unlock()
 	ch <- fourth
 }
