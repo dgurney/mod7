@@ -28,6 +28,7 @@ test:
 	GOCACHE=off	go test mod7/tendigit -coverprofile=coverage/tendigit.coverage
 	GOCACHE=off	go test mod7/validation -coverprofile=coverage/validation.coverage
 bench:
+# By using an arbitrary run target here we skip running tests, saving considerable amounts of time on slow (= 90's era) hardware.
 	go test -run=sonic mod7/oem -bench=.
 	go test -run=sonic mod7/tendigit -bench=.
 	go test -run=sonic mod7/validation -bench=.
