@@ -35,9 +35,8 @@ func genSite(ch chan string, m *sync.Mutex) {
 // The last digit is the check digit. The check digit cannot be 0 or >=8.
 func genSeven(ch chan string, m *sync.Mutex) {
 	m.Lock()
-	valid := false
 	final := ""
-	for !valid {
+	for {
 		for i := 0; i < 7; i++ {
 			serial[i] = r.Intn(9)
 			if i == 6 {
@@ -53,10 +52,10 @@ func genSeven(ch chan string, m *sync.Mutex) {
 			sum += dig
 		}
 		if sum%7 == 0 {
-			valid = true
 			for _, digits := range serial {
 				final += strconv.Itoa(digits)
 			}
+			break
 		}
 	}
 	m.Unlock()

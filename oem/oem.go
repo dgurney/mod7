@@ -38,8 +38,7 @@ func generateFirst(ch chan string, m *sync.Mutex) {
 func generateThird(ch chan string, m *sync.Mutex) {
 	m.Lock()
 	final := ""
-	valid := false
-	for !valid {
+	for {
 		// We generate only 6 digits because of the "first digit must be 0" rule
 		for i := 0; i < 6; i++ {
 			serial[i] = r.Intn(9)
@@ -55,10 +54,10 @@ func generateThird(ch chan string, m *sync.Mutex) {
 			sum += dig
 		}
 		if sum%7 == 0 {
-			valid = true
 			for _, digits := range serial {
 				final += strconv.Itoa(digits)
 			}
+			break
 		}
 	}
 	m.Unlock()
