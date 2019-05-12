@@ -29,6 +29,7 @@ func getVersion() string {
 
 func main() {
 	b := flag.Bool("b", false, "Generate both keys.")
+	bench := flag.Bool("bench", false, "Benchmark the generation time of 6000000 keys.")
 	o := flag.Bool("o", false, "Generate an OEM key.")
 	d := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key).")
 	r := flag.Int("r", 1, "Generate n keys.")
@@ -48,6 +49,10 @@ func main() {
 	}
 	if *ver {
 		fmt.Printf("mod7 v%s by Daniel Gurney\n", getVersion())
+		return
+	}
+	if *bench {
+		Benchmark()
 		return
 	}
 	if len(*bv) > 0 {
