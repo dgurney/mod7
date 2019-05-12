@@ -24,6 +24,6 @@ func Benchmark() {
 		<-dch
 	}
 
-	fmt.Printf("Took %s to generate %d keys.", time.Since(started).Round(time.Millisecond), count*2)
+	fmt.Printf("Took %s to generate %d keys.\n", time.Since(started).Round(time.Millisecond), count*2)
 	return
 }
