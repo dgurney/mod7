@@ -7,9 +7,6 @@ import (
 	"time"
 )
 
-//import ("mod7/oem"
-//"mod7/tendigit")
-
 // Benchmark generates 6000000 keys and shows the elapsed time. It's meant to be much more understandable and user-accessible than "make bench"
 func Benchmark() {
 	och := make(chan string)
