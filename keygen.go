@@ -35,6 +35,7 @@ func main() {
 	r := flag.Int("r", 1, "Generate n keys.")
 	t := flag.Bool("t", false, "Show how long the generation or batch validation took.")
 	v := flag.String("v", "", "Validate a CD or OEM key")
+	a := flag.Bool("a", false, "Generate and print every valid CD and OEM key. Maybe go see a movie while it's running?")
 	total := flag.Bool("total", false, "Print the total amount of valid CD keys")
 	bv := flag.String("bv", "", "Batch validate a key file. The key file should be a plain text file (with a .txt extension) with 1 key per line.")
 	ver := flag.Bool("ver", false, "Show version information and exit")
@@ -43,19 +44,20 @@ func main() {
 		*r = 1
 	}
 	var started time.Time
-	CDKeych := make(chan string)
-	OEMKeych := make(chan string)
 	if *t {
 		started = time.Now()
 	}
+
 	if *ver {
 		fmt.Printf("mod7 v%s by Daniel Gurney\n", getVersion())
 		return
 	}
+
 	if *bench {
 		Benchmark()
 		return
 	}
+
 	if len(*bv) > 0 {
 		if filepath.Ext(*bv) != ".txt" {
 			fmt.Println("The key file must be a plain text file with a .txt extension. Tricking this check will not do anything interesting, so don't bother.")
@@ -89,6 +91,7 @@ func main() {
 				}
 			}
 		}
+
 		if *t {
 			var ended time.Duration
 			switch {
@@ -111,10 +114,12 @@ func main() {
 		}
 		return
 	}
+
 	if len(*v) > 0 {
 		validation.ValidateKey(*v)
 		return
 	}
+
 	if *total {
 		fmt.Println("Calculating the total amount of valid CD and OEM keys...")
 		validcd := make(chan int)
@@ -125,6 +130,18 @@ func main() {
 		fmt.Println("Amount of valid OEM keys:", <-validoem)
 		return
 	}
+
+	if *a {
+		generateAllCD()
+		if *t {
+			ended := time.Since(started).Round(time.Millisecond)
+			fmt.Printf("Took %s to generate all keys.\n", ended)
+		}
+		return
+	}
+
+	CDKeych := make(chan string)
+	OEMKeych := make(chan string)
 	for i := 0; i < *r; i++ {
 		switch {
 		case *d:
