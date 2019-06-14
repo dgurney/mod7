@@ -31,15 +31,15 @@ func totaloem(ch chan int) {
 			valid++
 		}
 	}
-	// 3294 valid dates + 99999 valid last segments
-	ch <- valid * 103293
+	// 3294 valid dates + 100000 valid last segments
+	ch <- valid * 103294
 }
 
 func printFinalCD(site int, ms []string, done chan bool) {
 	done <- true
 }
 
-func generateAllCD() {
+func generateAllCD(ch chan bool) {
 	mainSegments := []string{}
 	valid := make(chan bool)
 	for main := 0; main < 9999999; main++ {
@@ -58,4 +58,38 @@ func generateAllCD() {
 			}
 		}
 	}
+	ch <- true
+}
+
+func generateAllOEM(ch chan bool) {
+	dates := []string{}
+	years := []string{"95", "96", "97", "98", "99", "00", "01", "02", "03"}
+	mainSegments := []string{}
+	lastSegments := []string{}
+	for _, y := range years {
+		for day := 1; day <= 366; day++ {
+			dates = append(dates, fmt.Sprintf("%03d%s", day, y))
+		}
+	}
+	for ls := 0; ls <= 99999; ls++ {
+		lastSegments = append(lastSegments, fmt.Sprintf("%05d", ls))
+	}
+	valid := make(chan bool)
+	for main := 0; main < 999999; main++ {
+		test := fmt.Sprintf("00195-OEM-%07d-00000", main)
+		go validation.BatchValidate(test, valid)
+		if <-valid {
+			mainSegments = append(mainSegments, fmt.Sprintf("%07d", main))
+		}
+	}
+
+	// And finally print all the actual keys
+	for _, d := range dates {
+		for _, m := range mainSegments {
+			for _, l := range lastSegments {
+				fmt.Printf("%s-OEM-%s-%s\n", d, m, l)
+			}
+		}
+	}
+	ch <- true
 }

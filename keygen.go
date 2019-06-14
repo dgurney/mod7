@@ -35,8 +35,8 @@ func main() {
 	r := flag.Int("r", 1, "Generate n keys.")
 	t := flag.Bool("t", false, "Show how long the generation or batch validation took.")
 	v := flag.String("v", "", "Validate a CD or OEM key")
-	a := flag.Bool("a", false, "Generate and print every valid CD and OEM key. Maybe go see a movie while it's running?")
-	total := flag.Bool("total", false, "Print the total amount of valid CD keys")
+	a := flag.Bool("a", false, "Generate and print every valid key of the specified type (-o, -d, or -b). Note that OEM will take forever.")
+	total := flag.Bool("total", false, "Print the total amount of valid keys")
 	bv := flag.String("bv", "", "Batch validate a key file. The key file should be a plain text file (with a .txt extension) with 1 key per line.")
 	ver := flag.Bool("ver", false, "Show version information and exit")
 	flag.Parse()
@@ -132,7 +132,25 @@ func main() {
 	}
 
 	if *a {
-		generateAllCD()
+		switch {
+		default:
+			fmt.Println("You must supply either -d, -o, or -b.")
+			return
+		case *d:
+			cdCh := make(chan bool)
+			generateAllCD(cdCh)
+		case *o:
+			oemCh := make(chan bool)
+			generateAllOEM(oemCh)
+		case *b:
+			cdCh := make(chan bool)
+			oemCh := make(chan bool)
+			go generateAllCD(cdCh)
+			go generateAllOEM(oemCh)
+			<-cdCh
+			<-oemCh
+
+		}
 		if *t {
 			ended := time.Since(started).Round(time.Millisecond)
 			fmt.Printf("Took %s to generate all keys.\n", ended)
