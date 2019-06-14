@@ -35,10 +35,6 @@ func totaloem(ch chan int) {
 	ch <- valid * 103294
 }
 
-func printFinalCD(site int, ms []string, done chan bool) {
-	done <- true
-}
-
 func generateAllCD(ch chan bool) {
 	mainSegments := []string{}
 	valid := make(chan bool)
