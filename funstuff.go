@@ -16,8 +16,8 @@ func total10digit(ch chan int) {
 			valid++
 		}
 	}
-	// There are 992 valid site numbers
-	ch <- valid * 992
+	// There are 993 valid site numbers
+	ch <- valid * 993
 }
 
 // Calculate the total amount of valid OEM keys.
@@ -31,6 +31,6 @@ func totaloem(ch chan int) {
 			valid++
 		}
 	}
-	// 3294 valid dates + 99999 valid last segments
-	ch <- valid * 103293
+	// 3294 valid dates + 100000 valid last segments
+	ch <- valid * 103294
 }
