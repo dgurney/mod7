@@ -30,13 +30,13 @@ func getVersion() string {
 func main() {
 	b := flag.Bool("b", false, "Generate both keys.")
 	bench := flag.Bool("bench", false, "Benchmark the generation time of 6000000 keys.")
-	o := flag.Bool("o", false, "Generate an OEM key.")
+	bv := flag.String("bv", "", "Batch validate a key file. The key file should be a plain text file (with a .txt extension) with 1 key per line.")
 	d := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key).")
+	o := flag.Bool("o", false, "Generate an OEM key.")
 	r := flag.Int("r", 1, "Generate n keys.")
 	t := flag.Bool("t", false, "Show how long the generation or batch validation took.")
-	v := flag.String("v", "", "Validate a CD or OEM key")
 	total := flag.Bool("total", false, "Print the total amount of valid CD keys")
-	bv := flag.String("bv", "", "Batch validate a key file. The key file should be a plain text file (with a .txt extension) with 1 key per line.")
+	v := flag.String("v", "", "Validate a CD or OEM key.")
 	ver := flag.Bool("ver", false, "Show version information and exit")
 	flag.Parse()
 	if *r < 1 {
