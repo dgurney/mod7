@@ -10,7 +10,6 @@ import (
 )
 
 var r = rand.New(rand.NewSource(time.Now().UnixNano()))
-var serial [7]int
 
 // Generate the so-called site number, which is the first segment of the key.
 func genSite(ch chan string, m *sync.Mutex) {
@@ -34,6 +33,7 @@ func genSite(ch chan string, m *sync.Mutex) {
 // Generate the second segment of the key. The digit sum of the seven numbers must be divisible by seven.
 // The last digit is the check digit. The check digit cannot be 0 or >=8.
 func genSeven(ch chan string, m *sync.Mutex) {
+	serial := make([]int, 7)
 	m.Lock()
 	final := ""
 	for {
