@@ -54,7 +54,10 @@ func main() {
 	}
 
 	if *bench {
-		Benchmark()
+		fmt.Println("Running key generation benchmark...")
+		generationBenchmark()
+		fmt.Println("Running key validation benchmark...")
+		validationBenchmark()
 		return
 	}
 
