@@ -29,7 +29,7 @@ func getVersion() string {
 
 func main() {
 	b := flag.Bool("b", false, "Generate both keys.")
-	bench := flag.Bool("bench", false, "Benchmark the generation time of 6000000 keys.")
+	bench := flag.Bool("bench", false, "Benchmark generation and validation of keys.")
 	bv := flag.String("bv", "", "Batch validate a key file. The key file should be a plain text file (with a .txt extension) with 1 key per line.")
 	d := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key).")
 	o := flag.Bool("o", false, "Generate an OEM key.")
