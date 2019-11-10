@@ -95,7 +95,6 @@ func validateOEM(key string) error {
 
 // ValidateKey validates the provided OEM or CD key. It should not be used when customized output is desired.
 func ValidateKey(k string) bool {
-	valid = true
 	maybeValidMessage := "%s is valid if you get no further output.\n"
 	unableToValidate := "Unable to validate key:"
 	// Make sure the provided key has a chance of being valid.
