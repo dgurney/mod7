@@ -1,6 +1,8 @@
 package validation
 
-import "strconv"
+import (
+	"strconv"
+)
 
 func batchValidateCDKey(key string, v chan bool) {
 	site, err := strconv.ParseInt(key[0:3], 10, 0)
@@ -19,6 +21,45 @@ func batchValidateCDKey(key string, v chan bool) {
 		v <- false
 		return
 	}
+	c := strconv.Itoa(int(main))
+	if !checkdigitCheck(c) {
+		v <- false
+		return
+	}
+	sum := digitsum(main)
+	if sum%7 != 0 {
+		v <- false
+		return
+	}
+	v <- true
+}
+
+func batchValidateECDKey(key string, v chan bool) {
+	_, err := strconv.ParseInt(key[0:4], 10, 0)
+	if err != nil {
+		v <- false
+		return
+	}
+	main, err := strconv.ParseInt(key[5:12], 10, 0)
+	if err != nil {
+		v <- false
+		return
+	}
+
+	// Error is safe to discard since we checked if it's a number before.
+	last, _ := strconv.ParseInt(key[3:4], 10, 0)
+	third, _ := strconv.ParseInt(key[2:3], 10, 0)
+	if last != third+1 && last != third+2 {
+		switch {
+		case third+1 > 9 && last == 0 || third+2 > 9 && last == 1:
+			break
+		default:
+			v <- false
+			return
+
+		}
+	}
+
 	c := strconv.Itoa(int(main))
 	if !checkdigitCheck(c) {
 		v <- false
@@ -87,6 +128,8 @@ func batchValidateOEMKey(key string, v chan bool) {
 func BatchValidate(k string, v chan bool) {
 	// Determine key type
 	switch {
+	case len(k) == 12 && k[4:5] == "-":
+		batchValidateECDKey(k, v)
 	case len(k) == 11 && k[3:4] == "-":
 		batchValidateCDKey(k, v)
 	case len(k) == 23 && k[5:6] == "-" && k[9:10] == "-" && k[17:18] == "-" && len(k[18:]) == 5:

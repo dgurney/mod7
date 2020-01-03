@@ -41,6 +41,46 @@ func validateCDKey(key string) error {
 	return nil
 }
 
+func validateECDKey(key string) error {
+	_, err := strconv.ParseInt(key[0:4], 10, 0)
+	if err != nil {
+		valid = false
+		return fmt.Errorf("the first segment isn't a number")
+	}
+	main, err := strconv.ParseInt(key[5:12], 10, 0)
+	if err != nil {
+		valid = false
+		return fmt.Errorf("the second segment isn't a number")
+	}
+
+	// Error is safe to discard since we checked if it's a number before.
+	last, _ := strconv.ParseInt(key[3:4], 10, 0)
+	third, _ := strconv.ParseInt(key[2:3], 10, 0)
+
+	if last != third+1 && last != third+2 {
+		switch {
+		case third+1 > 9 && last == 0 || third+2 > 9 && last == 1:
+			break
+		default:
+			valid = false
+			fmt.Println("The first segment is invalid: The last digit must be 3rd digit + 1 or 2.")
+		}
+	}
+
+	c := strconv.Itoa(int(main))
+	secondSegmentInvalid := "The second segment is invalid:"
+	if !checkdigitCheck(c) {
+		valid = false
+		fmt.Println(secondSegmentInvalid, "the last digit cannot be 0 or >= 8.")
+	}
+	sum := digitsum(main)
+	if sum%7 != 0 {
+		valid = false
+		fmt.Printf("%s the digit sum (%d) must be divisible by 7.\n", secondSegmentInvalid, sum)
+	}
+	return nil
+}
+
 func validateOEM(key string) error {
 	_, err := strconv.ParseInt(key[0:5], 10, 0)
 	if err != nil {
@@ -102,6 +142,12 @@ func ValidateKey(k string) bool {
 	case len(k) == 11 && k[3:4] == "-":
 		fmt.Printf(maybeValidMessage, k)
 		if err := validateCDKey(k); err != nil {
+			valid = false
+			fmt.Println(unableToValidate, err)
+		}
+	case len(k) == 12 && k[4:5] == "-":
+		fmt.Printf(maybeValidMessage, k)
+		if err := validateECDKey(k); err != nil {
 			valid = false
 			fmt.Println(unableToValidate, err)
 		}

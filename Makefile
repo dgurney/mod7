@@ -24,12 +24,14 @@ clean:
 test:
 	rm -rf coverage
 	mkdir coverage
-	go test mod7/oem -coverprofile=coverage/oem.coverage
-	go test mod7/tendigit -coverprofile=coverage/tendigit.coverage
-	go test mod7/validation -coverprofile=coverage/validation.coverage
+	go test mod7/oem -coverprofile=coverage/oem
+	go test mod7/tendigit -coverprofile=coverage/tendigit
+	go test mod7/elevendigit -coverprofile=coverage/elevendigit
+	go test mod7/validation -coverprofile=coverage/validation
 bench:
 # By using an arbitrary run target here we skip running tests, saving considerable amounts of time on slow (= 90's era) hardware.
 	go test -run=sonic mod7/oem -bench=.
+	go test -run=sonic mod7/elevendigit -bench=.
 	go test -run=sonic mod7/tendigit -bench=.
 	go test -run=sonic mod7/validation -bench=.
 cross: windows darwin freebsd linux

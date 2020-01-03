@@ -19,6 +19,19 @@ func total10digit(ch chan int) {
 	// There are 993 valid site numbers
 	ch <- valid * 993
 }
+func total11digit(ch chan int) {
+	valid := 0
+	for main := 0; main < 9999999; main++ {
+		test := fmt.Sprintf("0001-%07d", main)
+		vch := make(chan bool)
+		go validation.BatchValidate(test, vch)
+		if <-vch {
+			valid++
+		}
+	}
+	// There are 1998 first segments instead of 1000 due to the whole +1 or +2 thing.
+	ch <- valid * 1998
+}
 
 // Calculate the total amount of valid OEM keys.
 func totaloem(ch chan int) {

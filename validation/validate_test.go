@@ -12,6 +12,9 @@ var validKeys = []string{
 	"10000-OEM-0000007-00000",
 	"32299-OEM-0840621-16752",
 	"118-5688143",
+	"1112-0000007",
+	// > 9 last digit
+	"9990-1111111",
 }
 var invalidKeys = []string{
 	// Not even close to a valid key
@@ -34,6 +37,7 @@ var invalidKeys = []string{
 	// Invalid check digit
 	"10000-OEM-0140628-12345",
 	"332-5683148",
+	"1112-1111118",
 	// Invalid third segment starting digit
 	"10000-OEM-8040621-12345",
 	// Invalid digit sum
@@ -42,11 +46,17 @@ var invalidKeys = []string{
 	// Not a number
 	"11a-1111111",
 	"111-a111111",
+	"a111-1111111",
+	"1111-a111111",
 	"1000a-OEM-0000007-11111",
 	"10000-OEM-00000a7-11111",
 	"10000-OEM-0000007-1111a",
 	// Invalid second segment
 	"10000-SEX-0000007-00000",
+	"1112-9254785",
+	// Invalid first segment
+	"1114-1111111",
+	"1117-1111111",
 }
 
 func TestSingleValidation(t *testing.T) {

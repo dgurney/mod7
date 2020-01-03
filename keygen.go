@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"mod7/elevendigit"
 	"mod7/oem"
 	"mod7/tendigit"
 	"mod7/validation"
@@ -28,10 +29,11 @@ func getVersion() string {
 }
 
 func main() {
-	b := flag.Bool("b", false, "Generate both keys.")
+	a := flag.Bool("a", false, "Generate all kinds of keys.")
 	bench := flag.Bool("bench", false, "Benchmark generation and validation of keys.")
 	bv := flag.String("bv", "", "Batch validate a key file. The key file should be a plain text file (with a .txt extension) with 1 key per line.")
 	d := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key).")
+	e := flag.Bool("e", false, "Generate an 11-digit CD key.")
 	o := flag.Bool("o", false, "Generate an OEM key.")
 	r := flag.Int("r", 1, "Generate n keys.")
 	t := flag.Bool("t", false, "Show how long the generation or batch validation took.")
@@ -123,30 +125,39 @@ func main() {
 	}
 
 	if *total {
-		fmt.Println("Calculating the total amount of valid CD and OEM keys...")
+		fmt.Println("Calculating the total amount of valid CD, 11-digit, and OEM keys...")
 		validcd := make(chan int)
+		validecd := make(chan int)
 		validoem := make(chan int)
 		go total10digit(validcd)
+		go total11digit(validecd)
 		go totaloem(validoem)
 		fmt.Println("Amount of valid CD keys:", <-validcd)
+		fmt.Println("Amount of valid 11-digit CD keys:", <-validecd)
 		fmt.Println("Amount of valid OEM keys:", <-validoem)
 		return
 	}
 
 	CDKeych := make(chan string)
+	eCDKeych := make(chan string)
 	OEMKeych := make(chan string)
 	for i := 0; i < *r; i++ {
 		switch {
+		case *e:
+			go elevendigit.Generate11digit(eCDKeych)
+			fmt.Println(<-eCDKeych)
 		case *d:
 			go tendigit.Generate10digit(CDKeych)
 			fmt.Println(<-CDKeych)
 		case *o:
 			go oem.GenerateOEM(OEMKeych)
 			fmt.Println(<-OEMKeych)
-		case *b:
+		case *a:
 			go oem.GenerateOEM(OEMKeych)
 			go tendigit.Generate10digit(CDKeych)
+			go elevendigit.Generate11digit(eCDKeych)
 			fmt.Println(<-CDKeych)
+			fmt.Println(<-eCDKeych)
 			fmt.Println(<-OEMKeych)
 		default:
 			fmt.Println("You must specify what you want to do! Usage:")
@@ -175,8 +186,8 @@ func main() {
 			case *r == 1:
 				fmt.Printf("Took %s to generate %d key.\n", ended, *r)
 			}
-		case *b:
-			fmt.Printf("Took %s to generate %d keys.\n", ended, *r*2)
+		case *a:
+			fmt.Printf("Took %s to generate %d keys.\n", ended, *r*3)
 		}
 	}
 }
