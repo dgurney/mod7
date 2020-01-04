@@ -59,7 +59,7 @@ func validateECDKey(key string) error {
 
 	if last != third+1 && last != third+2 {
 		switch {
-		case third+1 > 9 && last == 0 || third+2 > 9 && last == 1:
+		case third+1 >= 9 && last == 0 || third+2 >= 9 && last == 1:
 			break
 		default:
 			valid = false

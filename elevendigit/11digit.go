@@ -12,29 +12,29 @@ import (
 var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 // Generate the first segment of the key.
-// Formula for last digit: third digit + 1 or 2. If the result is more than 9, it's 0.
+// Formula for last digit: third digit + 1 or 2. If the result is more than 9, it's 0 or 1.
 func genSite(ch chan string, m *sync.Mutex) {
 	m.Lock()
 	s := r.Intn(999)
 	site := fmt.Sprintf("%03d", s)
-	die := r.Intn(2)
 	last, _ := strconv.Atoi(site[len(site)-1:])
 	fourth := 0
 	switch {
 	default:
+		fourth = last + 1
+	case r.Intn(2) == 1:
+		fourth = last + 2
+	}
+	switch {
+	case fourth > 9 && last == 8:
 		switch {
 		default:
-			fourth = last + 1
-		case last+1 >= 10:
-			break
+			fourth = 9
+		case r.Intn(2) == 1:
+			fourth = 0
 		}
-	case die == 1:
-		switch {
-		default:
-			fourth = last + 2
-		case last+2 >= 10:
-			break
-		}
+	case fourth > 9:
+		fourth = r.Intn(2)
 	}
 	m.Unlock()
 	ch <- fmt.Sprintf("%s%d", site, fourth)
