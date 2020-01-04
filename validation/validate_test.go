@@ -15,6 +15,8 @@ var validKeys = []string{
 	"1112-0000007",
 	// > 9 last digit
 	"9990-1111111",
+	"8889-1111111",
+	"8880-1111111",
 }
 var invalidKeys = []string{
 	// Not even close to a valid key
@@ -57,6 +59,8 @@ var invalidKeys = []string{
 	// Invalid first segment
 	"1114-1111111",
 	"1117-1111111",
+	"8881-1111111",
+	"8885-1111111",
 }
 
 func TestSingleValidation(t *testing.T) {

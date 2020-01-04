@@ -51,6 +51,10 @@ func batchValidateECDKey(key string, v chan bool) {
 	third, _ := strconv.ParseInt(key[2:3], 10, 0)
 	if last != third+1 && last != third+2 {
 		switch {
+		// Fuck it, I quit
+		case third == 8 && last == 1 && last != 9 && last != 0:
+			v <- false
+			return
 		case third+1 >= 9 && last == 0 || third+2 >= 9 && last == 1:
 			break
 		default:
