@@ -37,7 +37,6 @@ func main() {
 	o := flag.Bool("o", false, "Generate an OEM key.")
 	r := flag.Int("r", 1, "Generate n keys.")
 	t := flag.Bool("t", false, "Show how long the generation or batch validation took.")
-	total := flag.Bool("total", false, "Print the total amount of valid CD keys")
 	v := flag.String("v", "", "Validate a CD or OEM key.")
 	ver := flag.Bool("ver", false, "Show version information and exit")
 	flag.Parse()
@@ -121,20 +120,6 @@ func main() {
 
 	if len(*v) > 0 {
 		validation.ValidateKey(*v)
-		return
-	}
-
-	if *total {
-		fmt.Println("Calculating the total amount of valid CD, 11-digit, and OEM keys...")
-		validcd := make(chan int)
-		validecd := make(chan int)
-		validoem := make(chan int)
-		go total10digit(validcd)
-		go total11digit(validecd)
-		go totaloem(validoem)
-		fmt.Println("Amount of valid CD keys:", <-validcd)
-		fmt.Println("Amount of valid 11-digit CD keys:", <-validecd)
-		fmt.Println("Amount of valid OEM keys:", <-validoem)
 		return
 	}
 
