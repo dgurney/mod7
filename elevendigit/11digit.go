@@ -26,15 +26,10 @@ func genSite(ch chan string, m *sync.Mutex) {
 		fourth = last + 2
 	}
 	switch {
-	case fourth > 9 && last == 8:
-		switch {
-		default:
-			fourth = 9
-		case r.Intn(2) == 1:
-			fourth = 0
-		}
-	case fourth > 9:
-		fourth = r.Intn(2)
+	case fourth == 10:
+		fourth = 0
+	case fourth > 10:
+		fourth = 1
 	}
 	m.Unlock()
 	ch <- fmt.Sprintf("%s%d", site, fourth)
