@@ -115,7 +115,7 @@ func validateOEM(key string) error {
 	}
 	if key[6:9] != "OEM" {
 		valid = false
-		fmt.Println("The second segment is invalid: must be OEM (a real setup program would not allow you to change it).")
+		fmt.Println("The second segment is invalid: must be OEM.")
 	}
 
 	third := key[10:17]
