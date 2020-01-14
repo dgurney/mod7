@@ -59,8 +59,7 @@ func validateECDKey(key string) error {
 
 	if last != third+1 && last != third+2 {
 		switch {
-		// Fuck it, I quit
-		case third == 8 && last == 1 && last != 9 && last != 0:
+		case third == 8 && last != 9 && last != 0:
 			valid = false
 			fmt.Println("The first segment is invalid: The last digit must be 3rd digit + 1 or 2.")
 		case third+1 >= 9 && last == 0 || third+2 >= 9 && last == 1:
