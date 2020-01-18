@@ -20,12 +20,10 @@ const version = "1.5.2"
 var gitVersion string
 
 func getVersion() string {
-	switch {
-	default:
-		return gitVersion
-	case len(gitVersion) == 0:
+	if len(gitVersion) == 0 {
 		return version
 	}
+	return gitVersion
 }
 
 func main() {
