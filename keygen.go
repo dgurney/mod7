@@ -124,28 +124,32 @@ func main() {
 	CDKeych := make(chan string)
 	eCDKeych := make(chan string)
 	OEMKeych := make(chan string)
+	if !*a && !*d && !*e && !*o {
+		fmt.Println("You must specify what you want to do! Usage:")
+		flag.PrintDefaults()
+		return
+	}
 	for i := 0; i < *r; i++ {
-		switch {
-		case *e:
-			go elevendigit.Generate11digit(eCDKeych)
-			fmt.Println(<-eCDKeych)
-		case *d:
-			go tendigit.Generate10digit(CDKeych)
-			fmt.Println(<-CDKeych)
-		case *o:
-			go oem.GenerateOEM(OEMKeych)
-			fmt.Println(<-OEMKeych)
-		case *a:
+		if *a {
 			go oem.GenerateOEM(OEMKeych)
 			go tendigit.Generate10digit(CDKeych)
 			go elevendigit.Generate11digit(eCDKeych)
 			fmt.Println(<-CDKeych)
 			fmt.Println(<-eCDKeych)
 			fmt.Println(<-OEMKeych)
-		default:
-			fmt.Println("You must specify what you want to do! Usage:")
-			flag.PrintDefaults()
 			return
+		}
+		if *e {
+			go elevendigit.Generate11digit(eCDKeych)
+			fmt.Println(<-eCDKeych)
+		}
+		if *d {
+			go tendigit.Generate10digit(CDKeych)
+			fmt.Println(<-CDKeych)
+		}
+		if *o {
+			go oem.GenerateOEM(OEMKeych)
+			fmt.Println(<-OEMKeych)
 		}
 	}
 	if *t {
