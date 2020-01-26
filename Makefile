@@ -26,8 +26,8 @@ clean:
 	rm -rf build/
 	rm -rf coverage/
 test:
-	#rm -rf coverage
-	#mkdir coverage
+	rm -rf coverage
+	mkdir coverage
 	go test ${PROGRAM}/oem -coverprofile=coverage/oem
 	go test ${PROGRAM}/tendigit -coverprofile=coverage/tendigit
 	go test ${PROGRAM}/elevendigit -coverprofile=coverage/elevendigit
@@ -38,5 +38,5 @@ bench:
 	go test -run=sonic ${PROGRAM}/elevendigit -bench=.
 	go test -run=sonic ${PROGRAM}/tendigit -bench=.
 	go test -run=sonic ${PROGRAM}/validation -bench=.
-cross: windows darwin freebsd linux
+cross: windows darwin freebsd linux openbsd
 all: install cross
