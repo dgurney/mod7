@@ -1,4 +1,4 @@
-# chicagokey
+# mod7
 Key generator for any Microsoft products that use the mod7 algorithm. Caveat emptor: despite being functional, this codebase is rather old, so you may find some stupid code here and there.
 
 ## Usage
