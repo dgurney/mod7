@@ -144,6 +144,10 @@ func main() {
 		flag.PrintDefaults()
 		return
 	}
+	if *e && *o && *d {
+		*e, *o, *d = false, false, false
+		*a = true
+	}
 	for i := 0; i < *r; i++ {
 		if *a {
 			go oem.GenerateOEM(OEMKeych)
@@ -152,7 +156,6 @@ func main() {
 			fmt.Println(<-CDKeych)
 			fmt.Println(<-eCDKeych)
 			fmt.Println(<-OEMKeych)
-			return
 		}
 		if *e {
 			go elevendigit.Generate11digit(eCDKeych)
@@ -180,6 +183,7 @@ func main() {
 			fmt.Println("Could not display elapsed time correctly :(")
 			return
 		}
+		mult := 0
 		switch {
 		default:
 			switch {
@@ -188,8 +192,11 @@ func main() {
 			case *r == 1:
 				fmt.Printf("Took %s to generate %d key.\n", ended, *r)
 			}
+		case *e && *o || *e && *d || *o && *d:
+			mult = 2
 		case *a:
-			fmt.Printf("Took %s to generate %d keys.\n", ended, *r*3)
+			mult = 3
 		}
+		fmt.Printf("Took %s to generate %d keys.\n", ended, *r*mult)
 	}
 }
