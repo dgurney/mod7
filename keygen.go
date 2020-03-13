@@ -148,6 +148,9 @@ func main() {
 		*e, *o, *d = false, false, false
 		*a = true
 	}
+	if *e && *a || *o && *a || *d && *a {
+		*a = false
+	}
 	for i := 0; i < *r; i++ {
 		if *a {
 			go oem.GenerateOEM(OEMKeych)
@@ -189,8 +192,10 @@ func main() {
 			switch {
 			case *r > 1:
 				fmt.Printf("Took %s to generate %d keys.\n", ended, *r)
+				return
 			case *r == 1:
 				fmt.Printf("Took %s to generate %d key.\n", ended, *r)
+				return
 			}
 		case *e && *o || *e && *d || *o && *d:
 			mult = 2
