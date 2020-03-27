@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
-	"sync"
 	"time"
 )
 
@@ -27,8 +26,7 @@ var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 // Generate the first segment of the key.
 // Formula for last digit: third digit + 1 or 2. If the result is more than 9, it's 0 or 1.
-func genSite(ch chan string, m *sync.Mutex) {
-	m.Lock()
+func genSite() string {
 	s := r.Intn(999)
 	site := fmt.Sprintf("%03d", s)
 	last, _ := strconv.Atoi(site[len(site)-1:])
@@ -45,15 +43,13 @@ func genSite(ch chan string, m *sync.Mutex) {
 	case fourth > 10:
 		fourth = 1
 	}
-	m.Unlock()
-	ch <- fmt.Sprintf("%s%d", site, fourth)
+	return fmt.Sprintf("%s%d", site, fourth)
 }
 
 // Generate the second segment of the key. The digit sum of the seven numbers must be divisible by seven.
 // The last digit is the check digit. The check digit cannot be 0 or >=8.
-func genSeven(ch chan string, m *sync.Mutex) {
+func genSeven() string {
 	serial := make([]int, 7)
-	m.Lock()
 	final := ""
 	for {
 		for i := 0; i < 7; i++ {
@@ -77,16 +73,10 @@ func genSeven(ch chan string, m *sync.Mutex) {
 			break
 		}
 	}
-	m.Unlock()
-	ch <- final
+	return final
 }
 
 // Generate11digit generates an 11-digit CD key.
 func Generate11digit(ch chan string) {
-	var m sync.Mutex
-	sch := make(chan string)
-	dch := make(chan string)
-	go genSite(sch, &m)
-	go genSeven(dch, &m)
-	ch <- <-sch + "-" + <-dch
+	ch <- genSite() + "-" + genSeven()
 }

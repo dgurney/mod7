@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
-	"sync"
 	"time"
 )
 
@@ -27,8 +26,7 @@ var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 // Generate the first segment of the key. The first three digits represent the julian date the COA was printed (001 to 366), and the last two are the year.
 // The year cannot be below 95 or above 03 (not Y2K-compliant D:).
-func generateFirst(ch chan string, m *sync.Mutex) {
-	m.Lock()
+func generateFirst() string {
 	var d int
 	nonzero := false
 	for !nonzero {
@@ -42,15 +40,13 @@ func generateFirst(ch chan string, m *sync.Mutex) {
 	date := fmt.Sprintf("%03d", d)
 	years := []string{"95", "96", "97", "98", "99", "00", "01", "02", "03"}
 	year := years[r.Intn(len(years))]
-	m.Unlock()
-	ch <- date + year
+	return date + year
 }
 
 // The third segment (OEM is the second) must begin with a zero, but otherwise it follows the same rule as the second segment of 10-digit keys:
 // The digit sum must be divisible by seven, and the check digit cannot be 0 or >=8.
-func generateThird(ch chan string, m *sync.Mutex) {
+func generateThird() string {
 	serial := make([]int, 6)
-	m.Lock()
 	final := ""
 	for {
 		// We generate only 6 digits because of the "first digit must be 0" rule
@@ -74,27 +70,17 @@ func generateThird(ch chan string, m *sync.Mutex) {
 			break
 		}
 	}
-	m.Unlock()
-	ch <- final
+	return final
 }
 
 // The fourth segment is truly irrelevant
-func generateFourth(ch chan string, m *sync.Mutex) {
-	m.Lock()
+func generateFourth() string {
 	f := r.Intn(99999)
 	fourth := fmt.Sprintf("%05d", f)
-	m.Unlock()
-	ch <- fourth
+	return fourth
 }
 
 // GenerateOEM generates an OEM key.
 func GenerateOEM(ch chan string) {
-	var m sync.Mutex
-	dch := make(chan string)
-	tch := make(chan string)
-	fch := make(chan string)
-	go generateFirst(dch, &m)
-	go generateThird(tch, &m)
-	go generateFourth(fch, &m)
-	ch <- <-dch + "-OEM-0" + <-tch + "-" + <-fch
+	ch <- generateFirst() + "-OEM-0" + generateThird() + "-" + generateFourth()
 }

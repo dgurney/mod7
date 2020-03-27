@@ -19,15 +19,13 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
-	"sync"
 	"time"
 )
 
 var r = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 // Generate the so-called site number, which is the first segment of the key.
-func genSite(ch chan string, m *sync.Mutex) {
-	m.Lock()
+func genSite() string {
 	site := ""
 	s := r.Intn(998)
 	// Technically 999 could be omitted as we don't generate a number that high, but we include it for posterity anyway.
@@ -40,15 +38,13 @@ func genSite(ch chan string, m *sync.Mutex) {
 	}
 
 	site = fmt.Sprintf("%03d", s)
-	m.Unlock()
-	ch <- site
+	return site
 }
 
 // Generate the second segment of the key. The digit sum of the seven numbers must be divisible by seven.
 // The last digit is the check digit. The check digit cannot be 0 or >=8.
-func genSeven(ch chan string, m *sync.Mutex) {
+func genSeven() string {
 	serial := make([]int, 7)
-	m.Lock()
 	final := ""
 	for {
 		for i := 0; i < 7; i++ {
@@ -72,16 +68,10 @@ func genSeven(ch chan string, m *sync.Mutex) {
 			break
 		}
 	}
-	m.Unlock()
-	ch <- final
+	return final
 }
 
 // Generate10digit generates a 10-digit CD key.
 func Generate10digit(ch chan string) {
-	var m sync.Mutex
-	sch := make(chan string)
-	dch := make(chan string)
-	go genSite(sch, &m)
-	go genSeven(dch, &m)
-	ch <- <-sch + "-" + <-dch
+	ch <- genSite() + "-" + genSeven()
 }
