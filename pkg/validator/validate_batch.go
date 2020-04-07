@@ -1,4 +1,4 @@
-package validation
+package validator
 
 /*
    Copyright (C) 2020 Daniel Gurney

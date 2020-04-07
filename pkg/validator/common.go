@@ -1,4 +1,4 @@
-package validation
+package validator
 
 func checkdigitCheck(c string) bool {
 	// Check digit cannot be 0 or >= 8.

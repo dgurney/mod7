@@ -20,16 +20,15 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"time"
 
-	"github.com/dgurney/mod7/elevendigit"
-	"github.com/dgurney/mod7/oem"
-	"github.com/dgurney/mod7/tendigit"
-	"github.com/dgurney/mod7/validation"
+	g "github.com/dgurney/mod7/pkg/generator"
+	"github.com/dgurney/mod7/pkg/validator"
 )
 
 // Used if mod7 is not built using the makefile.
-const version = "1.6.3"
+const version = "2.0.0"
 
 // git describe --tags --dirty
 var gitVersion string
@@ -42,19 +41,19 @@ func getVersion() string {
 }
 
 func main() {
-	a := flag.Bool("a", false, "Generate all kinds of keys.")
-	bench := flag.Bool("bench", false, "Benchmark generation and validation of keys.")
-	bv := flag.String("bv", "", "Batch validate a key file. The key file should be a plain text file (with a .txt extension) with 1 key per line.")
-	d := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key).")
-	e := flag.Bool("e", false, "Generate an 11-digit CD key.")
-	o := flag.Bool("o", false, "Generate an OEM key.")
-	r := flag.Int("r", 1, "Generate n keys.")
+	all := flag.Bool("a", false, "Generate all kinds of keys.")
+	bench := flag.Bool("bench", false, "Benchmark generation and validator of keys.")
+	batchvalidate := flag.String("bv", "", "Batch validate a key file. The key file should be a plain text file (with a .txt extension) with 1 key per line.")
+	cd := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key).")
+	elevencd := flag.Bool("e", false, "Generate an 11-digit CD key.")
+	oem := flag.Bool("o", false, "Generate an OEM key.")
+	repeat := flag.Int("r", 1, "Generate n keys.")
 	t := flag.Bool("t", false, "Show how long the generation or batch validation took.")
-	v := flag.String("v", "", "Validate a CD or OEM key.")
+	validate := flag.String("v", "", "Validate a CD or OEM key.")
 	ver := flag.Bool("ver", false, "Show version information and exit")
 	flag.Parse()
-	if *r < 1 {
-		*r = 1
+	if *repeat < 1 {
+		*repeat = 1
 	}
 
 	var started time.Time
@@ -70,17 +69,17 @@ func main() {
 	if *bench {
 		fmt.Println("Running key generation benchmark...")
 		k := generationBenchmark()
-		fmt.Println("Running key validation benchmark...")
+		fmt.Println("Running key validator benchmark...")
 		validationBenchmark(k)
 		return
 	}
 
-	if len(*bv) > 0 {
-		if filepath.Ext(*bv) != ".txt" {
+	if len(*batchvalidate) > 0 {
+		if filepath.Ext(*batchvalidate) != ".txt" {
 			fmt.Println("The key file must be a plain text file with a .txt extension. Tricking this check will not do anything interesting, so don't bother.")
 			return
 		}
-		keyfile, err := os.Open(*bv)
+		keyfile, err := os.Open(*batchvalidate)
 		if err != nil {
 			fmt.Println("Unable to open key file:", err)
 			return
@@ -99,7 +98,7 @@ func main() {
 		}
 		for i := 0; i < kl; i++ {
 			if keys[i] != "" {
-				go validation.BatchValidate(keys[i], vch)
+				go validator.BatchValidate(keys[i], vch)
 				switch {
 				default:
 					fmt.Printf("%s is invalid\n", keys[i])
@@ -131,45 +130,48 @@ func main() {
 		return
 	}
 
-	if len(*v) > 0 {
-		validation.ValidateKey(*v)
+	if len(*validate) > 0 {
+		validator.ValidateKey(*validate)
 		return
 	}
 
-	CDKeych := make(chan string)
-	eCDKeych := make(chan string)
-	OEMKeych := make(chan string)
-	if !*a && !*d && !*e && !*o {
+	CDKeych := make(chan string, runtime.NumCPU())
+	eCDKeych := make(chan string, runtime.NumCPU())
+	OEMKeych := make(chan string, runtime.NumCPU())
+	if !*all && !*cd && !*elevencd && !*oem {
 		fmt.Println("You must specify what you want to do! Usage:")
 		flag.PrintDefaults()
 		return
 	}
-	if *e && *o && *d {
-		*e, *o, *d = false, false, false
-		*a = true
+	if *elevencd && *oem && *cd {
+		*elevencd, *oem, *cd = false, false, false
+		*all = true
 	}
-	if *e && *a || *o && *a || *d && *a {
-		*a = false
+	// a and key type are mutually exclusive
+	if *elevencd && *all || *oem && *all || *cd && *all {
+		*all = false
 	}
-	for i := 0; i < *r; i++ {
-		if *a {
-			go oem.GenerateOEM(OEMKeych)
-			go tendigit.Generate10digit(CDKeych)
-			go elevendigit.Generate11digit(eCDKeych)
-			fmt.Println(<-CDKeych)
-			fmt.Println(<-eCDKeych)
+	oemkey := g.OEM{}
+	ecdkey := g.ElevenCD{}
+	cdkey := g.CD{}
+	for i := 0; i < *repeat; i++ {
+		if *all {
+			go g.GenerateKey(oemkey, OEMKeych)
+			go g.GenerateKey(cdkey, CDKeych)
+			go g.GenerateKey(ecdkey, eCDKeych)
 			fmt.Println(<-OEMKeych)
-		}
-		if *e {
-			go elevendigit.Generate11digit(eCDKeych)
-			fmt.Println(<-eCDKeych)
-		}
-		if *d {
-			go tendigit.Generate10digit(CDKeych)
 			fmt.Println(<-CDKeych)
 		}
-		if *o {
-			go oem.GenerateOEM(OEMKeych)
+		if *elevencd {
+			go g.GenerateKey(ecdkey, eCDKeych)
+			fmt.Println(<-eCDKeych)
+		}
+		if *cd {
+			go g.GenerateKey(cdkey, CDKeych)
+			fmt.Println(<-CDKeych)
+		}
+		if *oem {
+			go g.GenerateKey(oemkey, OEMKeych)
 			fmt.Println(<-OEMKeych)
 		}
 	}
@@ -190,18 +192,18 @@ func main() {
 		switch {
 		default:
 			switch {
-			case *r > 1:
-				fmt.Printf("Took %s to generate %d keys.\n", ended, *r)
+			case *repeat > 1:
+				fmt.Printf("Took %s to generate %d keys.\n", ended, *repeat)
 				return
-			case *r == 1:
-				fmt.Printf("Took %s to generate %d key.\n", ended, *r)
+			case *repeat == 1:
+				fmt.Printf("Took %s to generate %d key.\n", ended, *repeat)
 				return
 			}
-		case *e && *o || *e && *d || *o && *d:
+		case *elevencd && *oem || *elevencd && *cd || *oem && *cd:
 			mult = 2
-		case *a:
+		case *all:
 			mult = 3
 		}
-		fmt.Printf("Took %s to generate %d keys.\n", ended, *r*mult)
+		fmt.Printf("Took %s to generate %d keys.\n", ended, *repeat*mult)
 	}
 }

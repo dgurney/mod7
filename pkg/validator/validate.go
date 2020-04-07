@@ -1,5 +1,5 @@
-// Package validation handles the validation of user-provided OEM and CD keys.
-package validation
+// Package validator handles the validation of user-provided OEM and CD keys.
+package validator
 
 /*
    Copyright (C) 2020 Daniel Gurney

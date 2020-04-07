@@ -1,4 +1,4 @@
-package tendigit
+package generator
 
 /*
    Copyright (C) 2020 Daniel Gurney
@@ -17,19 +17,20 @@ package tendigit
 import (
 	"testing"
 
-	"github.com/dgurney/mod7/validation"
+	"github.com/dgurney/mod7/pkg/validator"
 )
 
 func TestCD(t *testing.T) {
+	cd := CD{}
 	ka := make([]string, 0)
 	dch := make(chan string)
 	vch := make(chan bool)
 	for i := 0; i < 500000; i++ {
-		go Generate10digit(dch)
+		go GenerateKey(cd, dch)
 		ka = append(ka, <-dch)
 	}
 	for i := 0; i < len(ka); i++ {
-		go validation.BatchValidate(ka[i], vch)
+		go validator.BatchValidate(ka[i], vch)
 		if !<-vch {
 			t.Errorf("Generated key %s is invalid!", ka[i])
 		}
@@ -38,11 +39,12 @@ func TestCD(t *testing.T) {
 }
 
 func Benchmark10digit100(b *testing.B) {
-	tch := make(chan string)
+	cd := CD{}
+	dch := make(chan string)
 	for n := 0; n < b.N; n++ {
 		for i := 0; i < 100; i++ {
-			go Generate10digit(tch)
-			<-tch
+			go GenerateKey(cd, dch)
+			<-dch
 		}
 	}
 }

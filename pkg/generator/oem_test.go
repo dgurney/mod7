@@ -1,4 +1,4 @@
-package oem
+package generator
 
 /*
    Copyright (C) 2020 Daniel Gurney
@@ -17,19 +17,20 @@ package oem
 import (
 	"testing"
 
-	"github.com/dgurney/mod7/validation"
+	"github.com/dgurney/mod7/pkg/validator"
 )
 
 func TestOEM(t *testing.T) {
+	oem := OEM{}
 	ka := make([]string, 0)
 	och := make(chan string)
 	vch := make(chan bool)
 	for i := 0; i < 500000; i++ {
-		go GenerateOEM(och)
+		go GenerateKey(oem, och)
 		ka = append(ka, <-och)
 	}
 	for i := 0; i < len(ka); i++ {
-		go validation.BatchValidate(ka[i], vch)
+		go validator.BatchValidate(ka[i], vch)
 		if !<-vch {
 			t.Errorf("Generated key %s is invalid!", ka[i])
 		}
@@ -38,12 +39,11 @@ func TestOEM(t *testing.T) {
 }
 
 func BenchmarkOEM100(b *testing.B) {
-	b.StopTimer()
+	oem := OEM{}
 	och := make(chan string)
-	b.StartTimer()
 	for n := 0; n < b.N; n++ {
 		for i := 0; i < 100; i++ {
-			go GenerateOEM(och)
+			go GenerateKey(oem, och)
 			<-och
 		}
 	}

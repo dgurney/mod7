@@ -1,5 +1,4 @@
-// Package tendigit handles generation of CD keys (XXX-XXXXXXX).
-package tendigit
+package generator
 
 /*
    Copyright (C) 2020 Daniel Gurney
@@ -19,40 +18,34 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
-	"time"
 )
 
-var r = rand.New(rand.NewSource(time.Now().UnixNano()))
-
-// Generate the so-called site number, which is the first segment of the key.
-func genSite() string {
-	site := ""
-	s := r.Intn(998)
+// Generate generates an 10-digit CD key.
+func (CD) Generate(ch chan string) {
+	// Generate the so-called site number, which is the first segment of the key.
+	first := ""
+	s := rand.Intn(998)
 	// Technically 999 could be omitted as we don't generate a number that high, but we include it for posterity anyway.
 	invalidSites := []int{333, 444, 555, 666, 777, 888, 999}
 	for _, v := range invalidSites {
 		if v == s {
 			// Site number is invalid, so we replace it with a guaranteed valid number
-			s = r.Intn(300)
+			s = rand.Intn(300)
 		}
 	}
+	first = fmt.Sprintf("%03d", s)
 
-	site = fmt.Sprintf("%03d", s)
-	return site
-}
-
-// Generate the second segment of the key. The digit sum of the seven numbers must be divisible by seven.
-// The last digit is the check digit. The check digit cannot be 0 or >=8.
-func genSeven() string {
+	// Generate the second segment of the key. The digit sum of the seven numbers must be divisible by seven.
+	// The last digit is the check digit. The check digit cannot be 0 or >=8.
 	serial := make([]int, 7)
-	final := ""
+	second := ""
 	for {
 		for i := 0; i < 7; i++ {
-			serial[i] = r.Intn(9)
+			serial[i] = rand.Intn(9)
 			if i == 6 {
 				// We must also generate a valid check digit
 				for serial[i] == 0 || serial[i] >= 8 {
-					serial[i] = r.Intn(7)
+					serial[i] = rand.Intn(7)
 				}
 			}
 		}
@@ -63,15 +56,10 @@ func genSeven() string {
 		}
 		if sum%7 == 0 {
 			for _, digits := range serial {
-				final += strconv.Itoa(digits)
+				second += strconv.Itoa(digits)
 			}
 			break
 		}
 	}
-	return final
-}
-
-// Generate10digit generates a 10-digit CD key.
-func Generate10digit(ch chan string) {
-	ch <- genSite() + "-" + genSeven()
+	ch <- first + "-" + second
 }

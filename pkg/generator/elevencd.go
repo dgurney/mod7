@@ -1,5 +1,4 @@
-// Package elevendigit handles generation of 11-digit CD keys (XXXX-XXXXXXX).
-package elevendigit
+package generator
 
 /*
    Copyright (C) 2020 Daniel Gurney
@@ -19,22 +18,21 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
-	"time"
 )
 
-var r = rand.New(rand.NewSource(time.Now().UnixNano()))
-
-// Generate the first segment of the key.
-// Formula for last digit: third digit + 1 or 2. If the result is more than 9, it's 0 or 1.
-func genSite() string {
-	s := r.Intn(999)
+// Generate generates an 11-digit CD key.
+func (ElevenCD) Generate(ch chan string) {
+	// Generate the first segment of the key.
+	// Formula for last digit: third digit + 1 or 2. If the result is more than 9, it's 0 or 1.
+	s := rand.Intn(999)
 	site := fmt.Sprintf("%03d", s)
 	last, _ := strconv.Atoi(site[len(site)-1:])
+	first := ""
 	fourth := 0
 	switch {
 	default:
 		fourth = last + 1
-	case r.Intn(2) == 1:
+	case rand.Intn(2) == 1:
 		fourth = last + 2
 	}
 	switch {
@@ -43,21 +41,19 @@ func genSite() string {
 	case fourth > 10:
 		fourth = 1
 	}
-	return fmt.Sprintf("%s%d", site, fourth)
-}
+	first = fmt.Sprintf("%s%d", site, fourth)
 
-// Generate the second segment of the key. The digit sum of the seven numbers must be divisible by seven.
-// The last digit is the check digit. The check digit cannot be 0 or >=8.
-func genSeven() string {
+	// Generate the second segment of the key. The digit sum of the seven numbers must be divisible by seven.
+	// The last digit is the check digit. The check digit cannot be 0 or >=8.
 	serial := make([]int, 7)
-	final := ""
+	second := ""
 	for {
 		for i := 0; i < 7; i++ {
-			serial[i] = r.Intn(9)
+			serial[i] = rand.Intn(9)
 			if i == 6 {
 				// We must also generate a valid check digit
 				for serial[i] == 0 || serial[i] >= 8 {
-					serial[i] = r.Intn(7)
+					serial[i] = rand.Intn(7)
 				}
 			}
 		}
@@ -68,15 +64,10 @@ func genSeven() string {
 		}
 		if sum%7 == 0 {
 			for _, digits := range serial {
-				final += strconv.Itoa(digits)
+				second += strconv.Itoa(digits)
 			}
 			break
 		}
 	}
-	return final
-}
-
-// Generate11digit generates an 11-digit CD key.
-func Generate11digit(ch chan string) {
-	ch <- genSite() + "-" + genSeven()
+	ch <- first + "-" + second
 }

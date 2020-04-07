@@ -18,14 +18,15 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dgurney/mod7/elevendigit"
-	"github.com/dgurney/mod7/oem"
-	"github.com/dgurney/mod7/tendigit"
-	"github.com/dgurney/mod7/validation"
+	g "github.com/dgurney/mod7/pkg/generator"
+	"github.com/dgurney/mod7/pkg/validator"
 )
 
 // generationBenchmark generates 3000000 keys and shows the elapsed time. It's meant to be much more understandable and user-accessible than "make bench"
 func generationBenchmark() []string {
+	oem := g.OEM{}
+	cd := g.CD{}
+	ecd := g.ElevenCD{}
 	och := make(chan string)
 	dch := make(chan string)
 	keys := make([]string, 0)
@@ -33,11 +34,11 @@ func generationBenchmark() []string {
 	count := 0
 	for i := 0; i < 1000000; i++ {
 		count++
-		go oem.GenerateOEM(och)
+		go g.GenerateKey(oem, och)
 		keys = append(keys, <-och)
-		go tendigit.Generate10digit(dch)
+		go g.GenerateKey(cd, dch)
 		keys = append(keys, <-dch)
-		go elevendigit.Generate11digit(dch)
+		go g.GenerateKey(ecd, dch)
 		keys = append(keys, <-dch)
 	}
 
@@ -50,7 +51,7 @@ func validationBenchmark(keys []string) {
 	vch := make(chan bool)
 	started := time.Now()
 	for _, v := range keys {
-		go validation.BatchValidate(v, vch)
+		go validator.BatchValidate(v, vch)
 		<-vch
 	}
 	fmt.Printf("Took %s to validate %d keys.\n", time.Since(started).Round(time.Millisecond), len(keys))
