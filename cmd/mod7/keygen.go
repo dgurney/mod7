@@ -131,7 +131,7 @@ func main() {
 	}
 
 	if len(*validate) > 0 {
-		validator.ValidateKey(*validate)
+		//validator.ValidateKey(*validate)
 		return
 	}
 

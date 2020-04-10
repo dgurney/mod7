@@ -77,27 +77,6 @@ var invalidKeys = []string{
 	"8885-1111111",
 }
 
-func TestSingleValidation(t *testing.T) {
-	for _, key := range validKeys {
-		v := ValidateKey(key)
-		switch {
-		default:
-			t.Logf("%s is valid, as expected.", key)
-		case !v:
-			t.Errorf("Valid key %s did not pass validation!", key)
-		}
-	}
-	for _, key := range invalidKeys {
-		v := ValidateKey(key)
-		switch {
-		default:
-			t.Logf("%s is not valid, as expected.", key)
-		case v:
-			t.Errorf("Invalid key %s passed validation!", key)
-		}
-	}
-}
-
 func TestBatchValidation(t *testing.T) {
 	vch := make(chan bool)
 	for _, key := range validKeys {
