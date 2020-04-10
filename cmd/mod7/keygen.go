@@ -161,6 +161,7 @@ func main() {
 			go g.GenerateKey(ecdkey, eCDKeych)
 			fmt.Println(<-OEMKeych)
 			fmt.Println(<-CDKeych)
+			fmt.Println(<-eCDKeych)
 		}
 		if *elevencd {
 			go g.GenerateKey(ecdkey, eCDKeych)
