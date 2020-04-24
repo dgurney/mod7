@@ -31,8 +31,10 @@ test:
 	rm -rf coverage
 	mkdir coverage
 	go test ${PROGRAMROOT}/pkg/generator -coverprofile=coverage/generator
+	go test ${PROGRAMROOT}/pkg/validator -coverprofile=coverage/validator
 bench:
 # By using an arbitrary run target here we skip running tests, saving considerable amounts of time on slow (= 90's era) hardware.
 	go test -run=sonic ${PROGRAMROOT}/pkg/generator -bench=.
+	go test -run=sonic ${PROGRAMROOT}/pkg/validator -bench=.
 cross: windows darwin freebsd linux openbsd
 all: install cross

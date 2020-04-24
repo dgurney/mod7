@@ -17,3 +17,19 @@ func digitsum(num int64) int64 {
 	}
 	return s
 }
+
+type keyValidator interface {
+	validate(chan string)
+}
+
+type oem struct {
+	key string
+}
+
+type elevencd struct {
+	key string
+}
+
+type cd struct {
+	key string
+}

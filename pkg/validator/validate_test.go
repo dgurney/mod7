@@ -80,7 +80,7 @@ var invalidKeys = []string{
 func TestBatchValidation(t *testing.T) {
 	vch := make(chan bool)
 	for _, key := range validKeys {
-		go BatchValidate(key, vch)
+		go Validate(key, vch)
 		switch {
 		default:
 			t.Logf("%s is valid, as expected.", key)
@@ -89,7 +89,7 @@ func TestBatchValidation(t *testing.T) {
 		}
 	}
 	for _, key := range invalidKeys {
-		go BatchValidate(key, vch)
+		go Validate(key, vch)
 		switch {
 		default:
 			t.Logf("%s is not valid, as expected.", key)
@@ -117,7 +117,7 @@ func BenchmarkBatchValidate100(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		for i := 0; i < kl; i++ {
 			if keys[i] != "" {
-				go BatchValidate(keys[i], vch)
+				go Validate(keys[i], vch)
 			}
 		}
 	}

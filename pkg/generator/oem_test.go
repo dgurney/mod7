@@ -30,7 +30,7 @@ func TestOEM(t *testing.T) {
 		ka = append(ka, <-och)
 	}
 	for i := 0; i < len(ka); i++ {
-		go validator.BatchValidate(ka[i], vch)
+		go validator.Validate(ka[i], vch)
 		if !<-vch {
 			t.Errorf("Generated key %s is invalid!", ka[i])
 		}

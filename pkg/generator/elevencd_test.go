@@ -30,7 +30,7 @@ func TestECD(t *testing.T) {
 		ka = append(ka, <-dch)
 	}
 	for i := 0; i < len(ka); i++ {
-		go validator.BatchValidate(ka[i], vch)
+		go validator.Validate(ka[i], vch)
 		if !<-vch {
 			t.Errorf("Generated key %s is invalid!", ka[i])
 		}

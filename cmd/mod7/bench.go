@@ -51,7 +51,7 @@ func validationBenchmark(keys []string) {
 	vch := make(chan bool)
 	started := time.Now()
 	for _, v := range keys {
-		go validator.BatchValidate(v, vch)
+		go validator.Validate(v, vch)
 		<-vch
 	}
 	fmt.Printf("Took %s to validate %d keys.\n", time.Since(started).Round(time.Millisecond), len(keys))

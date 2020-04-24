@@ -98,7 +98,7 @@ func main() {
 		}
 		for i := 0; i < kl; i++ {
 			if keys[i] != "" {
-				go validator.BatchValidate(keys[i], vch)
+				go validator.Validate(keys[i], vch)
 				switch {
 				default:
 					fmt.Printf("%s is invalid\n", keys[i])
@@ -131,7 +131,14 @@ func main() {
 	}
 
 	if len(*validate) > 0 {
-		//validator.ValidateKey(*validate)
+		vch := make(chan bool)
+		go validator.Validate(*validate, vch)
+		switch {
+		default:
+			fmt.Printf("%s is not valid.\n", *validate)
+		case <-vch:
+			fmt.Printf("%s is valid.\n", *validate)
+		}
 		return
 	}
 
