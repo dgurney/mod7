@@ -28,7 +28,7 @@ import (
 )
 
 // Used if mod7 is not built using the makefile.
-const version = "2.0.0"
+const version = "2.1.0"
 
 // git describe --tags --dirty
 var gitVersion string
