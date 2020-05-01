@@ -34,11 +34,11 @@ func generationBenchmark() []string {
 	count := 0
 	for i := 0; i < 1000000; i++ {
 		count++
-		go g.GenerateKey(oem, och)
+		go oem.Generate(och)
 		keys = append(keys, <-och)
-		go g.GenerateKey(cd, dch)
+		go cd.Generate(dch)
 		keys = append(keys, <-dch)
-		go g.GenerateKey(ecd, dch)
+		go ecd.Generate(dch)
 		keys = append(keys, <-dch)
 	}
 

@@ -26,8 +26,3 @@ type ElevenCD struct {
 // CD Key
 type CD struct {
 }
-
-// GenerateKey generates a key of the desired type.
-func GenerateKey(k KeyGenerator, ch chan string) {
-	k.Generate(ch)
-}

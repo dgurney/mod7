@@ -163,23 +163,23 @@ func main() {
 	cdkey := g.CD{}
 	for i := 0; i < *repeat; i++ {
 		if *all {
-			go g.GenerateKey(oemkey, OEMKeych)
-			go g.GenerateKey(cdkey, CDKeych)
-			go g.GenerateKey(ecdkey, eCDKeych)
+			go oemkey.Generate(OEMKeych)
+			go cdkey.Generate(CDKeych)
+			go ecdkey.Generate(eCDKeych)
 			fmt.Println(<-OEMKeych)
 			fmt.Println(<-CDKeych)
 			fmt.Println(<-eCDKeych)
 		}
 		if *elevencd {
-			go g.GenerateKey(ecdkey, eCDKeych)
+			go ecdkey.Generate(eCDKeych)
 			fmt.Println(<-eCDKeych)
 		}
 		if *cd {
-			go g.GenerateKey(cdkey, CDKeych)
+			go cdkey.Generate(CDKeych)
 			fmt.Println(<-CDKeych)
 		}
 		if *oem {
-			go g.GenerateKey(oemkey, OEMKeych)
+			go oemkey.Generate(OEMKeych)
 			fmt.Println(<-OEMKeych)
 		}
 	}

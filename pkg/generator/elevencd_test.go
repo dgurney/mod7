@@ -26,7 +26,7 @@ func TestECD(t *testing.T) {
 	dch := make(chan string)
 	vch := make(chan bool)
 	for i := 0; i < 500000; i++ {
-		go GenerateKey(ecd, dch)
+		go ecd.Generate(dch)
 		ka = append(ka, <-dch)
 	}
 	for i := 0; i < len(ka); i++ {
@@ -43,7 +43,7 @@ func Benchmark11digit100(b *testing.B) {
 	dch := make(chan string)
 	for n := 0; n < b.N; n++ {
 		for i := 0; i < 100; i++ {
-			go GenerateKey(ecd, dch)
+			go ecd.Generate(dch)
 			<-dch
 		}
 	}

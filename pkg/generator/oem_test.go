@@ -26,7 +26,7 @@ func TestOEM(t *testing.T) {
 	och := make(chan string)
 	vch := make(chan bool)
 	for i := 0; i < 500000; i++ {
-		go GenerateKey(oem, och)
+		go oem.Generate(och)
 		ka = append(ka, <-och)
 	}
 	for i := 0; i < len(ka); i++ {
@@ -43,7 +43,7 @@ func BenchmarkOEM100(b *testing.B) {
 	och := make(chan string)
 	for n := 0; n < b.N; n++ {
 		for i := 0; i < 100; i++ {
-			go GenerateKey(oem, och)
+			go oem.Generate(och)
 			<-och
 		}
 	}
