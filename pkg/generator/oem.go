@@ -23,7 +23,7 @@ import (
 func (o OEM) Generate(ch chan string) {
 	// Generate the first segment of the key. The first three digits represent the julian date the COA was printed (001 to 366), and the last two are the year.
 	// The year cannot be below 95 or above 03 (not Y2K-compliant D:).
-	var d int
+	d := 0
 	first := ""
 	nonzero := false
 	for !nonzero {
