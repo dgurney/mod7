@@ -17,7 +17,6 @@ package generator
 import (
 	"fmt"
 	"math/rand"
-	"strconv"
 )
 
 // Generate generates an OEM key
@@ -42,28 +41,16 @@ func (o OEM) Generate(ch chan string) {
 
 	// The third segment (OEM is the second) must begin with a zero, but otherwise it follows the same rule as the second segment of 10-digit keys:
 	// The digit sum must be divisible by seven, and the check digit cannot be 0 or >=8.
-	serial := make([]int, 6)
 	third := ""
 	for {
-		// We generate only 6 digits because of the "first digit must be 0" rule
-		for i := 0; i < 6; i++ {
-			serial[i] = rand.Intn(9)
-			if i == 5 {
-				// We must also generate a valid check digit
-				for serial[i] == 0 || serial[i] >= 8 {
-					serial[i] = rand.Intn(7)
-				}
-			}
-		}
-		sum := 0
-		for _, dig := range serial {
-			sum += dig
-		}
+		s := rand.Intn(999999)
+		// Perform the actual validation
+		sum := digitsum(s)
 		if sum%7 == 0 {
-			for _, digits := range serial {
-				third += strconv.Itoa(digits)
+			third = fmt.Sprintf("%06d", s)
+			if checkdigitCheck(third) {
+				break
 			}
-			break
 		}
 	}
 

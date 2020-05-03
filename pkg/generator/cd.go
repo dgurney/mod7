@@ -17,7 +17,6 @@ package generator
 import (
 	"fmt"
 	"math/rand"
-	"strconv"
 )
 
 // Generate generates an 10-digit CD key.
@@ -37,28 +36,16 @@ func (CD) Generate(ch chan string) {
 
 	// Generate the second segment of the key. The digit sum of the seven numbers must be divisible by seven.
 	// The last digit is the check digit. The check digit cannot be 0 or >=8.
-	serial := make([]int, 7)
 	second := ""
 	for {
-		for i := 0; i < 7; i++ {
-			serial[i] = rand.Intn(9)
-			if i == 6 {
-				// We must also generate a valid check digit
-				for serial[i] == 0 || serial[i] >= 8 {
-					serial[i] = rand.Intn(7)
-				}
-			}
-		}
+		s := rand.Intn(9999999)
 		// Perform the actual validation
-		sum := 0
-		for _, dig := range serial {
-			sum += dig
-		}
+		sum := digitsum(s)
 		if sum%7 == 0 {
-			for _, digits := range serial {
-				second += strconv.Itoa(digits)
+			second = fmt.Sprintf("%07d", s)
+			if checkdigitCheck(second) {
+				break
 			}
-			break
 		}
 	}
 	ch <- first + "-" + second
