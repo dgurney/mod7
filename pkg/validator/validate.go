@@ -14,7 +14,7 @@ package validator
    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// Validate is used to validate a provided key.
+// Validate validates a provided key.
 func Validate(k string, v chan bool) {
 	// Determine key type
 	switch {
