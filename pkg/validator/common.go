@@ -1,8 +1,8 @@
 package validator
 
-func checkdigitCheck(c string) bool {
+func checkdigitCheck(k int64) bool {
 	// Check digit cannot be 0 or >= 8.
-	if c[len(c)-1:] == "0" || c[len(c)-1:] >= "8" {
+	if k%10 == 0 || k%10 >= 8 {
 		return false
 	}
 	return true

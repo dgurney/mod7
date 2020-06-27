@@ -30,8 +30,7 @@ func (e elevencd) validate(v chan bool) {
 		}
 	}
 
-	c := strconv.Itoa(int(main))
-	if !checkdigitCheck(c) {
+	if !checkdigitCheck(main) {
 		v <- false
 		return
 	}

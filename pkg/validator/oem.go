@@ -39,8 +39,7 @@ func (o oem) validate(v chan bool) {
 		v <- false
 		return
 	}
-	c := strconv.Itoa(int(th))
-	if !checkdigitCheck(c) {
+	if !checkdigitCheck(th) {
 		v <- false
 		return
 	}

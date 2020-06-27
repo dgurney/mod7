@@ -19,8 +19,7 @@ func (c cd) validate(v chan bool) {
 		v <- false
 		return
 	}
-	check := strconv.Itoa(int(main))
-	if !checkdigitCheck(check) {
+	if !checkdigitCheck(main) {
 		v <- false
 		return
 	}

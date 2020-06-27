@@ -30,8 +30,8 @@ clean:
 test:
 	rm -rf coverage
 	mkdir coverage
-	go test ${PROGRAMROOT}/pkg/generator -coverprofile=coverage/generator
-	go test ${PROGRAMROOT}/pkg/validator -coverprofile=coverage/validator
+	go test ${PROGRAMROOT}/pkg/generator -coverprofile=coverage/generator -count=1
+	go test ${PROGRAMROOT}/pkg/validator -coverprofile=coverage/validator -count=1
 bench:
 # By using an arbitrary run target here we skip running tests, saving considerable amounts of time on slow (= 90's era) hardware.
 	go test -run=sonic ${PROGRAMROOT}/pkg/generator -bench=.
