@@ -52,7 +52,7 @@ func (ElevenCD) Generate(ch chan string) {
 		sum := digitsum(s)
 		if sum%7 == 0 {
 			second = fmt.Sprintf("%07d", s)
-			if checkdigitCheck(second) {
+			if checkdigitCheck(s) {
 				break
 			}
 		}

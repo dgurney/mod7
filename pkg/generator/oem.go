@@ -48,7 +48,7 @@ func (o OEM) Generate(ch chan string) {
 		sum := digitsum(s)
 		if sum%7 == 0 {
 			third = fmt.Sprintf("%06d", s)
-			if checkdigitCheck(third) {
+			if checkdigitCheck(s) {
 				break
 			}
 		}
