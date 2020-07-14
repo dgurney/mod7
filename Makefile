@@ -36,4 +36,6 @@ bench:
 	go test -run=sonic ${PROGRAMROOT}/pkg/generator -bench=.
 	go test -run=sonic ${PROGRAMROOT}/pkg/validator -bench=.
 cross: windows darwin freebsd linux openbsd
+package: windows darwin linux
+	cd build; zip -r windows.zip windows && zip -r darwin.zip darwin && zip -r linux.zip linux
 all: install cross
