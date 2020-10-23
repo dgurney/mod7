@@ -23,12 +23,12 @@ import (
 	"runtime"
 	"time"
 
-	g "github.com/dgurney/mod7/pkg/generator"
-	"github.com/dgurney/mod7/pkg/validator"
+	g "github.com/dgurney/mod7/v2/pkg/generator"
+	"github.com/dgurney/mod7/v2/pkg/validator"
 )
 
 // Used if mod7 is not built using the makefile.
-const version = "2.2.0"
+const version = "4.0.0"
 
 // git describe --tags --dirty
 var gitVersion string

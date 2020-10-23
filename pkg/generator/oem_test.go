@@ -17,7 +17,7 @@ package generator
 import (
 	"testing"
 
-	"github.com/dgurney/mod7/pkg/validator"
+	"github.com/dgurney/mod7/v2/pkg/validator"
 )
 
 func TestOEM(t *testing.T) {
