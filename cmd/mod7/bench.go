@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"time"
 
-	g "github.com/dgurney/mod7/v2/pkg/generator"
-	"github.com/dgurney/mod7/v2/pkg/validator"
+	g "github.com/dgurney/mod7/v4/pkg/generator"
+	"github.com/dgurney/mod7/v4/pkg/validator"
 )
 
 // generationBenchmark generates the specifed amount of keys and shows the elapsed time. It's meant to be much more understandable and user-accessible than "make bench"

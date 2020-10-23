@@ -17,7 +17,7 @@ package generator
 import (
 	"testing"
 
-	"github.com/dgurney/mod7/v2/pkg/validator"
+	"github.com/dgurney/mod7/v4/pkg/validator"
 )
 
 func TestECD(t *testing.T) {

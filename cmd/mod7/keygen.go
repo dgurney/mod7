@@ -23,8 +23,8 @@ import (
 	"runtime"
 	"time"
 
-	g "github.com/dgurney/mod7/v2/pkg/generator"
-	"github.com/dgurney/mod7/v2/pkg/validator"
+	g "github.com/dgurney/mod7/v4/pkg/generator"
+	"github.com/dgurney/mod7/v4/pkg/validator"
 )
 
 // Used if mod7 is not built using the makefile.
