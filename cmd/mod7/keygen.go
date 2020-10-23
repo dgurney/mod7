@@ -42,7 +42,7 @@ func getVersion() string {
 
 func main() {
 	all := flag.Bool("a", false, "Generate all kinds of keys.")
-	bench := flag.Bool("bench", false, "Benchmark generation and validator of keys.")
+	bench := flag.Int("bench", 0, "Benchmark generation and validation of N keys.")
 	batchvalidate := flag.String("bv", "", "Batch validate a key file. The key file should be a plain text file (with a .txt extension) with 1 key per line.")
 	cd := flag.Bool("d", false, "Generate a 10-digit key (aka CD Key).")
 	elevencd := flag.Bool("e", false, "Generate an 11-digit CD key.")
@@ -66,9 +66,9 @@ func main() {
 		return
 	}
 
-	if *bench {
+	if *bench != 0 {
 		fmt.Println("Running key generation benchmark...")
-		k := generationBenchmark()
+		k := generationBenchmark(*bench)
 		fmt.Println("Running key validator benchmark...")
 		validationBenchmark(k)
 		return

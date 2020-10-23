@@ -22,8 +22,8 @@ import (
 	"github.com/dgurney/mod7/pkg/validator"
 )
 
-// generationBenchmark generates 3000000 keys and shows the elapsed time. It's meant to be much more understandable and user-accessible than "make bench"
-func generationBenchmark() []string {
+// generationBenchmark generates the specifed amount of keys and shows the elapsed time. It's meant to be much more understandable and user-accessible than "make bench"
+func generationBenchmark(amount int) []string {
 	oem := g.OEM{}
 	cd := g.CD{}
 	ecd := g.ElevenCD{}
@@ -32,7 +32,7 @@ func generationBenchmark() []string {
 	keys := make([]string, 0)
 	started := time.Now()
 	count := 0
-	for i := 0; i < 1000000; i++ {
+	for i := 0; i < amount; i++ {
 		count++
 		go oem.Generate(och)
 		keys = append(keys, <-och)
